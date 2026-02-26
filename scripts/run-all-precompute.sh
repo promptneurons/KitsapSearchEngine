@@ -188,3 +188,19 @@ for cache in data/llms-txt-cache.jsonl data/macrobius-cache.jsonl \
     fi
 done
 log "=== Done === Log: $LOG"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Step 6: SQLite DLC packaging (portable customer deliverable)
+# ─────────────────────────────────────────────────────────────────────────────
+log '--- [6/6] SQLite DLC packaging ---'
+for cache in data/llms-txt-cache.jsonl data/macrobius-cache.jsonl \
+             data/phora-cache.jsonl data/od-cache.jsonl data/salo-cache.jsonl; do
+    cache_path="$REPO_ROOT/$cache"
+    if [ -f "$cache_path" ]; then
+        corpus=$(basename "$cache" | sed 's/-cache\.jsonl//')
+        out="$REPO_ROOT/data/${corpus}.sqlite"
+        log "  Packaging $corpus .."
+        python3 "$REPO_ROOT/scripts/cache2sqlite.py" \
+            --cache "$cache_path" --out "$out" 2>&1 | tee -a "$LOG"
+    fi
+done

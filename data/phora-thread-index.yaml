@@ -1,0 +1,18 @@
+name: phora
+sections:
+- children: []
+  fgid: []
+  files:
+  - path: data/phora-threads/thread-34.yaml
+    title: Ukraine-Russia WAR updates
+  - path: data/phora-threads/thread-125.yaml
+    title: The Amish, the Mennonites, and other White ethno-religious separatist communities
+  - path: data/phora-threads/thread-128.yaml
+    title: Liberal and Leftist \
+  - path: data/phora-threads/thread-172.yaml
+    title: Western Reactions to the War in Ukraine
+  - path: data/phora-threads/thread-217.yaml
+    title: Far Right in Poland
+  gln: ''
+  name: phora-all
+source: phora-nova
