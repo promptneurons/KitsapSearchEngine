@@ -45,7 +45,7 @@ def parse_sprint_code(sprint_str):
         yy = int(sprint_str[:2])
         mm = int(sprint_str[2:4])
         # Old Daynotes format: YY 0-14 = actual year 2010-2024 (offset from 2010)
-        # MantisBT-60: 11102 = Oct 2021 (YY=11, 2010+11=2021)
+        # MantisBT-60: 11102 = Oct 2021 P2 (days 20-31). P: 0=days1-9, 1=days10-19, 2=days20-31
         # Transition: sprint 25000 Dec 2024; new system 25010+ uses 2000+YY
         if 0 <= yy <= 14:
             yy += 10
