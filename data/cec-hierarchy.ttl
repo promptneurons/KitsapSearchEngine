@@ -1,0 +1,550 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cec: <http://purl.org/cec/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# Cutter Expansive Classification - 5-Level Hierarchy
+# Generated: 2026-02-23
+# Source: Cutter's Expansive Classification (1882)
+# Task: bd-5mc.2
+
+# =============================================================================
+# LEVEL 0: Root
+# =============================================================================
+
+cec:root a skos:ConceptScheme ;
+    rdfs:label "Cutter Expansive Classification" ;
+    dct:creator "Charles Ammi Cutter" ;
+    dct:date "1882" ;
+    skos:note "Transitional between Dewey Decimal and Library of Congress systems" ;
+    skos:hasTopConcept cec:A, cec:B, cec:C, cec:D, cec:E, cec:F, cec:G, cec:H,
+                       cec:J, cec:K, cec:L, cec:M, cec:N, cec:O, cec:Q, cec:R,
+                       cec:U, cec:V, cec:W, cec:X, cec:Y, cec:Z .
+
+# =============================================================================
+# LEVEL 1: Main Classes (26)
+# =============================================================================
+
+cec:A a skos:Concept ;
+    skos:prefLabel "Works of Reference and General"@en ;
+    skos:notation "A" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:B a skos:Concept ;
+    skos:prefLabel "Philosophy, Paedeia, Logic, Religion"@en ;
+    skos:notation "B" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:narrower cec:B1, cec:B2, cec:B3, cec:B4, cec:B5 .
+
+cec:C a skos:Concept ;
+    skos:prefLabel "Christianity and Judaism"@en ;
+    skos:altLabel "Orthodox Christianity"@en ;
+    skos:notation "C" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:note "Extended for STI to include detailed Orthodox classification" .
+
+cec:D a skos:Concept ;
+    skos:prefLabel "Ecclesiastical History"@en ;
+    skos:notation "D" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:E a skos:Concept ;
+    skos:prefLabel "Biography"@en ;
+    skos:notation "E" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:note "Named entities who are natural persons" .
+
+cec:F a skos:Concept ;
+    skos:prefLabel "History"@en ;
+    skos:notation "F" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:narrower cec:F1, cec:F2, cec:F3, cec:F4, cec:F5, cec:F6, cec:F7, cec:F8, cec:F9 .
+
+cec:G a skos:Concept ;
+    skos:prefLabel "Geography"@en ;
+    skos:notation "G" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:note "Places and regional studies" .
+
+cec:H a skos:Concept ;
+    skos:prefLabel "Demotics, Society, Social Science"@en ;
+    skos:notation "H" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:narrower cec:H1, cec:H2, cec:H3, cec:H4, cec:H5 .
+
+cec:J a skos:Concept ;
+    skos:prefLabel "Politics, Governance"@en ;
+    skos:notation "J" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:K a skos:Concept ;
+    skos:prefLabel "Legislation, Law, Women, Societies"@en ;
+    skos:notation "K" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:note "Organizations and corporations as named entities" .
+
+cec:L a skos:Concept ;
+    skos:prefLabel "Science and Arts"@en ;
+    skos:notation "L" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:narrower cec:L1, cec:L2, cec:L3, cec:L4, cec:L5 .
+
+cec:M a skos:Concept ;
+    skos:prefLabel "Natural History, Biology"@en ;
+    skos:notation "M" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:N a skos:Concept ;
+    skos:prefLabel "Botany"@en ;
+    skos:notation "N" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:O a skos:Concept ;
+    skos:prefLabel "Zoology, Anthropology, Ethnology"@en ;
+    skos:notation "O" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:Q a skos:Concept ;
+    skos:prefLabel "Medicine, Health"@en ;
+    skos:notation "Q" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:R a skos:Concept ;
+    skos:prefLabel "Useful Arts, Technics"@en ;
+    skos:notation "R" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root ;
+    skos:narrower cec:R1, cec:R2, cec:R3, cec:R4, cec:R5, cec:R6, cec:R7 .
+
+cec:U a skos:Concept ;
+    skos:prefLabel "Art of War"@en ;
+    skos:notation "U" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:V a skos:Concept ;
+    skos:prefLabel "Recreative, Sports, Games"@en ;
+    skos:notation "V" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:W a skos:Concept ;
+    skos:prefLabel "Fine Arts"@en ;
+    skos:notation "W" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:X a skos:Concept ;
+    skos:prefLabel "English Language and Literature"@en ;
+    skos:notation "X" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:Y a skos:Concept ;
+    skos:prefLabel "Language, Philology (non-English)"@en ;
+    skos:notation "Y" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+cec:Z a skos:Concept ;
+    skos:prefLabel "Literature (non-English)"@en ;
+    skos:notation "Z" ;
+    skos:inScheme cec:root ;
+    skos:topConceptOf cec:root .
+
+# =============================================================================
+# LEVEL 2: Divisions (B - Philosophy example)
+# =============================================================================
+
+cec:B1 a skos:Concept ;
+    skos:prefLabel "History of Philosophy"@en ;
+    skos:notation "B1" ;
+    skos:broader cec:B ;
+    skos:inScheme cec:root .
+
+cec:B2 a skos:Concept ;
+    skos:prefLabel "Metaphysics"@en ;
+    skos:notation "B2" ;
+    skos:broader cec:B ;
+    skos:inScheme cec:root .
+
+cec:B3 a skos:Concept ;
+    skos:prefLabel "Ethics"@en ;
+    skos:notation "B3" ;
+    skos:broader cec:B ;
+    skos:inScheme cec:root .
+
+cec:B4 a skos:Concept ;
+    skos:prefLabel "Logic"@en ;
+    skos:notation "B4" ;
+    skos:broader cec:B ;
+    skos:inScheme cec:root .
+
+cec:B5 a skos:Concept ;
+    skos:prefLabel "General Treatises"@en ;
+    skos:notation "B5" ;
+    skos:broader cec:B ;
+    skos:inScheme cec:root ;
+    skos:narrower cec:B51, cec:B52, cec:B53, cec:B54 .
+
+# =============================================================================
+# LEVEL 3: Sections (B5 - General Treatises)
+# =============================================================================
+
+cec:B51 a skos:Concept ;
+    skos:prefLabel "Ancient Philosophy"@en ;
+    skos:notation "B51" ;
+    skos:broader cec:B5 ;
+    skos:inScheme cec:root ;
+    skos:narrower cec:B511, cec:B512, cec:B513 .
+
+cec:B52 a skos:Concept ;
+    skos:prefLabel "Medieval Philosophy"@en ;
+    skos:notation "B52" ;
+    skos:broader cec:B5 ;
+    skos:inScheme cec:root .
+
+cec:B53 a skos:Concept ;
+    skos:prefLabel "Modern Philosophy"@en ;
+    skos:notation "B53" ;
+    skos:broader cec:B5 ;
+    skos:inScheme cec:root ;
+    skos:narrower cec:B531, cec:B532, cec:B533, cec:B534 .
+
+cec:B54 a skos:Concept ;
+    skos:prefLabel "Contemporary Philosophy"@en ;
+    skos:notation "B54" ;
+    skos:broader cec:B5 ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# LEVEL 4: Subsections (B51 - Ancient Philosophy)
+# =============================================================================
+
+cec:B511 a skos:Concept ;
+    skos:prefLabel "Pre-Socratic Philosophy"@en ;
+    skos:notation "B511" ;
+    skos:broader cec:B51 ;
+    skos:inScheme cec:root .
+
+cec:B512 a skos:Concept ;
+    skos:prefLabel "Greek Philosophy"@en ;
+    skos:notation "B512" ;
+    skos:broader cec:B51 ;
+    skos:inScheme cec:root ;
+    skos:note "Socrates, Plato, Aristotle" .
+
+cec:B513 a skos:Concept ;
+    skos:prefLabel "Roman Philosophy"@en ;
+    skos:notation "B513" ;
+    skos:broader cec:B51 ;
+    skos:inScheme cec:root ;
+    skos:note "Stoicism, Epicureanism, Neoplatonism" .
+
+# Level 4: Modern Philosophy
+cec:B531 a skos:Concept ;
+    skos:prefLabel "Continental Rationalism"@en ;
+    skos:notation "B531" ;
+    skos:broader cec:B53 ;
+    skos:inScheme cec:root .
+
+cec:B532 a skos:Concept ;
+    skos:prefLabel "British Empiricism"@en ;
+    skos:notation "B532" ;
+    skos:broader cec:B53 ;
+    skos:inScheme cec:root .
+
+cec:B533 a skos:Concept ;
+    skos:prefLabel "German Idealism"@en ;
+    skos:notation "B533" ;
+    skos:broader cec:B53 ;
+    skos:inScheme cec:root .
+
+cec:B534 a skos:Concept ;
+    skos:prefLabel "Existentialism and Phenomenology"@en ;
+    skos:notation "B534" ;
+    skos:broader cec:B53 ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# LEVEL 2: History Divisions (F)
+# =============================================================================
+
+cec:F1 a skos:Concept ;
+    skos:prefLabel "Ancient History"@en ;
+    skos:notation "F1" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F2 a skos:Concept ;
+    skos:prefLabel "Medieval History"@en ;
+    skos:notation "F2" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F3 a skos:Concept ;
+    skos:prefLabel "Modern European History"@en ;
+    skos:notation "F3" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F4 a skos:Concept ;
+    skos:prefLabel "British History"@en ;
+    skos:notation "F4" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F5 a skos:Concept ;
+    skos:prefLabel "French History"@en ;
+    skos:notation "F5" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F6 a skos:Concept ;
+    skos:prefLabel "German History"@en ;
+    skos:notation "F6" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F7 a skos:Concept ;
+    skos:prefLabel "Russian History"@en ;
+    skos:notation "F7" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F8 a skos:Concept ;
+    skos:prefLabel "American History"@en ;
+    skos:notation "F8" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+cec:F9 a skos:Concept ;
+    skos:prefLabel "Asian and African History"@en ;
+    skos:notation "F9" ;
+    skos:broader cec:F ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# LEVEL 2: Social Science Divisions (H)
+# =============================================================================
+
+cec:H1 a skos:Concept ;
+    skos:prefLabel "Sociology"@en ;
+    skos:notation "H1" ;
+    skos:broader cec:H ;
+    skos:inScheme cec:root .
+
+cec:H2 a skos:Concept ;
+    skos:prefLabel "Statistics"@en ;
+    skos:notation "H2" ;
+    skos:broader cec:H ;
+    skos:inScheme cec:root .
+
+cec:H3 a skos:Concept ;
+    skos:prefLabel "Economics"@en ;
+    skos:notation "H3" ;
+    skos:broader cec:H ;
+    skos:inScheme cec:root .
+
+cec:H4 a skos:Concept ;
+    skos:prefLabel "Commerce and Trade"@en ;
+    skos:notation "H4" ;
+    skos:broader cec:H ;
+    skos:inScheme cec:root .
+
+cec:H5 a skos:Concept ;
+    skos:prefLabel "Communications and Transportation"@en ;
+    skos:notation "H5" ;
+    skos:broader cec:H ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# LEVEL 2: Science Divisions (L)
+# =============================================================================
+
+cec:L1 a skos:Concept ;
+    skos:prefLabel "Mathematics"@en ;
+    skos:notation "L1" ;
+    skos:broader cec:L ;
+    skos:inScheme cec:root .
+
+cec:L2 a skos:Concept ;
+    skos:prefLabel "Astronomy"@en ;
+    skos:notation "L2" ;
+    skos:broader cec:L ;
+    skos:inScheme cec:root .
+
+cec:L3 a skos:Concept ;
+    skos:prefLabel "Physics"@en ;
+    skos:notation "L3" ;
+    skos:broader cec:L ;
+    skos:inScheme cec:root .
+
+cec:L4 a skos:Concept ;
+    skos:prefLabel "Chemistry"@en ;
+    skos:notation "L4" ;
+    skos:broader cec:L ;
+    skos:inScheme cec:root .
+
+cec:L5 a skos:Concept ;
+    skos:prefLabel "Geology"@en ;
+    skos:notation "L5" ;
+    skos:broader cec:L ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# LEVEL 2: Useful Arts Divisions (R)
+# =============================================================================
+
+cec:R1 a skos:Concept ;
+    skos:prefLabel "Engineering"@en ;
+    skos:notation "R1" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+cec:R2 a skos:Concept ;
+    skos:prefLabel "Building and Architecture"@en ;
+    skos:notation "R2" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+cec:R3 a skos:Concept ;
+    skos:prefLabel "Manufactures"@en ;
+    skos:notation "R3" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+cec:R4 a skos:Concept ;
+    skos:prefLabel "Mining and Metallurgy"@en ;
+    skos:notation "R4" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+cec:R5 a skos:Concept ;
+    skos:prefLabel "Agriculture"@en ;
+    skos:notation "R5" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+cec:R6 a skos:Concept ;
+    skos:prefLabel "Domestic Economy"@en ;
+    skos:notation "R6" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+cec:R7 a skos:Concept ;
+    skos:prefLabel "Business and Commerce"@en ;
+    skos:notation "R7" ;
+    skos:broader cec:R ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# LEVEL 5: Cutter Numbers (Examples for key figures)
+# =============================================================================
+
+# Philosophy - Greek
+cec:B512-P a skos:Concept ;
+    skos:prefLabel "Plato"@en ;
+    skos:notation "B512.P" ;
+    skos:broader cec:B512 ;
+    skos:inScheme cec:root ;
+    skos:note "Full path: B > B5 > B51 > B512 > B512.P" .
+
+cec:B512-A a skos:Concept ;
+    skos:prefLabel "Aristotle"@en ;
+    skos:notation "B512.A" ;
+    skos:broader cec:B512 ;
+    skos:inScheme cec:root .
+
+cec:B512-S a skos:Concept ;
+    skos:prefLabel "Socrates"@en ;
+    skos:notation "B512.S" ;
+    skos:broader cec:B512 ;
+    skos:inScheme cec:root .
+
+# Modern Philosophy figures
+cec:B534-H a skos:Concept ;
+    skos:prefLabel "Heidegger"@en ;
+    skos:notation "B534.H" ;
+    skos:broader cec:B534 ;
+    skos:inScheme cec:root .
+
+cec:B534-N a skos:Concept ;
+    skos:prefLabel "Nietzsche"@en ;
+    skos:notation "B534.N" ;
+    skos:broader cec:B534 ;
+    skos:inScheme cec:root .
+
+# =============================================================================
+# MEC → CEC Crosswalk (for migration)
+# =============================================================================
+
+# Current shallow MEC tags mapped to full CEC paths
+# This enables automated migration of existing classifications
+
+cec:mec-crosswalk a skos:Collection ;
+    rdfs:label "MEC to CEC Crosswalk" ;
+    skos:member [
+        rdfs:label "philosophy → B" ;
+        skos:exactMatch cec:B
+    ], [
+        rdfs:label "plato → B512.P" ;
+        skos:exactMatch cec:B512-P
+    ], [
+        rdfs:label "aristotle → B512.A" ;
+        skos:exactMatch cec:B512-A
+    ], [
+        rdfs:label "heidegger → B534.H" ;
+        skos:exactMatch cec:B534-H
+    ], [
+        rdfs:label "nietzsche → B534.N" ;
+        skos:exactMatch cec:B534-N
+    ], [
+        rdfs:label "history → F" ;
+        skos:exactMatch cec:F
+    ], [
+        rdfs:label "russia → F7" ;
+        skos:exactMatch cec:F7
+    ], [
+        rdfs:label "economics → H3" ;
+        skos:exactMatch cec:H3
+    ], [
+        rdfs:label "politics → J" ;
+        skos:exactMatch cec:J
+    ], [
+        rdfs:label "christianity → C" ;
+        skos:exactMatch cec:C
+    ], [
+        rdfs:label "orthodox → C" ;
+        skos:exactMatch cec:C
+    ], [
+        rdfs:label "science → L" ;
+        skos:exactMatch cec:L
+    ], [
+        rdfs:label "technology → R" ;
+        skos:exactMatch cec:R
+    ], [
+        rdfs:label "war → U" ;
+        skos:exactMatch cec:U
+    ], [
+        rdfs:label "film → W" ;
+        skos:exactMatch cec:W
+    ], [
+        rdfs:label "music → W" ;
+        skos:exactMatch cec:W
+    ] .

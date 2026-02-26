@@ -1,0 +1,8 @@
+# Large generated data
+data/od-threads/
+data/od-cache.jsonl
+data/gln-cache.jsonl
+*.log
+nohup.out
+__pycache__/
+*.pyc
