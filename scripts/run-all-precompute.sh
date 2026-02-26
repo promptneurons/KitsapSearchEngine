@@ -79,11 +79,38 @@ fi
 # 1. Macrobius Substack — refresh from RSS
 # ─────────────────────────────────────────────────────────────────────────────
 log "--- [1/5] Macrobius Substack refresh ---"
+# NOTE: RSS only returns ~6 recent items; we have 20 posts from fuller scrape
+# (CCE demo subset for MQL-009/010 Courtenay Turner + Christine Jones)
+# fetch new posts then rebuild index from ALL files in dir
 python3 scripts/substack-extract.py \
     --url https://macrobius.substack.com \
     --output-dir data/macrobius \
     --index data/macrobius-index.yaml \
     2>&1 | tee -a "$LOG" || log "WARN: macrobius extract failed (continuing)"
+
+# Rebuild index from all existing YAMLs (not just RSS batch)
+log "Rebuilding macrobius index from all $(ls data/macrobius/*.yaml 2>/dev/null | wc -l) files..."
+python3 - << 'PYEOF'
+import yaml, os
+from pathlib import Path
+repo = Path(__file__).parent.parent if False else Path('.')
+out_dir = repo / 'data' / 'macrobius'
+files = sorted(out_dir.glob('*.yaml'))
+entries = []
+for f in files:
+    try:
+        doc = yaml.safe_load(f.read_text())
+        entries.append({'path': f'data/macrobius/{f.name}', 'title': doc.get('title', f.stem)})
+    except Exception:
+        pass
+index = {'name': 'macrobius', 'source': 'substack', 'sections': [{
+    'name': 'macrobius-all', 'gln': '', 'fgid': [],
+    'files': entries, 'children': []
+}]}
+with open(repo / 'data' / 'macrobius-index.yaml', 'w') as fh:
+    yaml.dump(index, fh, allow_unicode=True, default_flow_style=False)
+print(f"Index rebuilt: {len(entries)} posts")
+PYEOF
 
 log "--- [2/5] Macrobius precompute ---"
 python3 scripts/gln-precompute.py \
