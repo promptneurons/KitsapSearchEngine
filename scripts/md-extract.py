@@ -95,6 +95,11 @@ def main():
             rel = f.relative_to(source)
             dir_path = str(rel.parent)
             sprint, quarter = parse_dir_meta(dir_path)
+            # Daynotes: sprint code may be the filename itself (e.g. 10082.md)
+            if not sprint:
+                stem_m = _SPRINT_RE.search(f.stem)
+                if stem_m and len(stem_m.group(1)) == 5:
+                    sprint = stem_m.group(1)
             slug = str(rel).replace('/', '_').replace(' ', '-')[:80]
             out_path = out_dir / f'{slug}.yaml'
             rel_out = f'data/{args.name}/{slug}.yaml'
