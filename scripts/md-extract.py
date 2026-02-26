@@ -8,15 +8,11 @@ Works on any flat/nested directory of .md files.
 Usage:
   python3 scripts/md-extract.py --source /path/to/vault --name obsidian
   python3 scripts/md-extract.py --source /path/to/Daynotes.wiki --name daynotes
+
+Per-doc YAML fields:
+  title, path, source, tags, frontmatter, dir_path, sprint, quarter,
+  links (wikilink targets -- thought thread graph), op (first 80 lines)
 """
-# SKELETON — complete post-reset
-# Key concerns:
-#   - YAML frontmatter (--- ... ---) extraction
-#   - Wikilink stripping ([[Page Title]] -> Page Title)
-#   - Tag extraction (#tag)
-#   - File path as GLN proxy (directory structure = taxonomy hint)
-#   - OP = first 80 lines after frontmatter
-#   - Handles nested dirs (Obsidian PARA structure)
 import argparse, re, sys
 from pathlib import Path
 try:
@@ -27,8 +23,18 @@ except ImportError:
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OP_MAX_LINES = 80
 
+_SPRINT_RE = re.compile(r'\b(\d{4,5})\b')
+_QUARTER_RE = re.compile(r'(FY\d{4}Q\d)', re.IGNORECASE)
+
+def extract_wikilinks(text):
+    """Return deduplicated list of [[link targets]] before stripping."""
+    targets = re.findall(r'\[\[([^\]|#]+?)(?:\|[^\]]*)?\]\]', text)
+    return list(dict.fromkeys(t.strip() for t in targets if t.strip()))
+
 def strip_wikilinks(text):
-    return re.sub(r'\[\[([^\]|]+)(?:\|[^\]]+)?\]\]', r'\1', text)
+    """Replace [[Target|Alias]] with Alias, [[Target]] with Target."""
+    return re.sub(r'\[\[([^\]|]+)(?:\|([^\]]+))?\]\]',
+                  lambda m: m.group(2) or m.group(1), text)
 
 def extract_frontmatter(text):
     if not text.startswith('---'): return {}, text
@@ -42,6 +48,21 @@ def extract_tags(text, fm):
     tags = list(fm.get('tags', fm.get('tag', [])) or [])
     inline = re.findall(r'(?<!\S)#([A-Za-z][A-Za-z0-9_/-]+)', text)
     return list(dict.fromkeys(tags + inline))
+
+def parse_dir_meta(dir_path):
+    """Extract sprint code and FY quarter from PARA directory path."""
+    parts = Path(dir_path).parts
+    sprint = None
+    quarter = None
+    for part in parts:
+        if not quarter:
+            m = _QUARTER_RE.search(part)
+            if m: quarter = m.group(1).upper()
+        if not sprint:
+            m = _SPRINT_RE.search(part)
+            if m and len(m.group(1)) in (4, 5):
+                sprint = m.group(1)
+    return sprint, quarter
 
 def main():
     p = argparse.ArgumentParser()
@@ -66,18 +87,29 @@ def main():
         try:
             text = f.read_text(encoding='utf-8', errors='replace')
             fm, body = extract_frontmatter(text)
-            body = strip_wikilinks(body)
-            tags = extract_tags(body, fm)
+            links = extract_wikilinks(body)
+            body_clean = strip_wikilinks(body)
+            tags = extract_tags(body_clean, fm)
             title = fm.get('title') or fm.get('Title') or f.stem
-            op_lines = [l for l in body.splitlines() if l.strip()][:OP_MAX_LINES]
+            op_lines = [l for l in body_clean.splitlines() if l.strip()][:OP_MAX_LINES]
             rel = f.relative_to(source)
+            dir_path = str(rel.parent)
+            sprint, quarter = parse_dir_meta(dir_path)
             slug = str(rel).replace('/', '_').replace(' ', '-')[:80]
             out_path = out_dir / f'{slug}.yaml'
             rel_out = f'data/{args.name}/{slug}.yaml'
-            doc = {'title': title, 'path': str(rel), 'source': args.name,
-                   'tags': tags, 'frontmatter': fm,
-                   'dir_path': str(rel.parent),
-                   'op': '\n'.join(op_lines)}
+            doc = {
+                'title': title,
+                'path': str(rel),
+                'source': args.name,
+                'tags': tags,
+                'frontmatter': fm,
+                'dir_path': dir_path,
+                'sprint': sprint,
+                'quarter': quarter,
+                'links': links,
+                'op': '\n'.join(op_lines),
+            }
             with open(out_path, 'w', encoding='utf-8') as fh:
                 yaml.dump(doc, fh, allow_unicode=True, default_flow_style=False, sort_keys=False)
             entries.append({'path': rel_out, 'title': title})
@@ -85,11 +117,9 @@ def main():
         except Exception as e:
             print(f'  WARN {f}: {e}', file=sys.stderr)
 
-    # Group index by top-level directory (PARA structure)
     from collections import defaultdict
     by_dir = defaultdict(list)
     for e in entries:
-        # Use top dir or first path component
         parts = Path(e['path']).parts
         key = parts[2] if len(parts) > 3 else 'root'
         by_dir[key].append({'path': e['path'], 'title': e['title']})
