@@ -28,6 +28,17 @@ spec = importlib.util.spec_from_file_location("gln_resolver", SCRIPT_DIR / "gln-
 gln_resolver = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gln_resolver)
 
+# Import SUMO/WordNet bridge (optional — only used when --wordnet-path is set)
+try:
+    import importlib.util as _ilu
+    _sw_spec = _ilu.spec_from_file_location("sumo_wordnet", SCRIPT_DIR / "sumo_wordnet.py")
+    sumo_wordnet = _ilu.module_from_spec(_sw_spec)
+    _sw_spec.loader.exec_module(sumo_wordnet)
+    _SUMO_AVAILABLE = True
+except Exception as _e:
+    sumo_wordnet = None
+    _SUMO_AVAILABLE = False
+
 try:
     import yaml
 except ImportError:
@@ -37,6 +48,7 @@ except ImportError:
 REPO_ROOT = SCRIPT_DIR.parent
 INDEX_PATH = REPO_ROOT / "llms-N200-index.yaml"
 DEFAULT_OUTPUT = REPO_ROOT / "data" / "gln-cache.jsonl"
+DEFAULT_WORDNET = REPO_ROOT / "data" / "wordnet-mappings"
 SNIPPET_MAX_CHARS = 200
 KEYWORD_TOP_N = 20
 
@@ -189,6 +201,11 @@ def main():
         type=int, default=0,
         help="Limit to first N files (0 = all, useful for testing)",
     )
+    parser.add_argument(
+        "--wordnet-path", "-w",
+        default=str(DEFAULT_WORDNET),
+        help=f"Path to WordNetMappings directory for SUMO expansion (default: {DEFAULT_WORDNET}). Pass 'none' to disable.",
+    )
 
     args = parser.parse_args()
     index_path = Path(args.index)
@@ -202,6 +219,23 @@ def main():
     print(f"Loading GLN tree from {index_path}...", file=sys.stderr)
     nodes = gln_resolver.load_gln_tree(str(index_path))
     print(f"Loaded {len(nodes)} GLN nodes", file=sys.stderr)
+
+    # Load SUMO/WordNet mapping (optional)
+    sumo_index = {}
+    sumo_map = {}
+    wordnet_path_str = args.wordnet_path.strip()
+    if wordnet_path_str.lower() != "none" and _SUMO_AVAILABLE:
+        wn_path = Path(wordnet_path_str)
+        if wn_path.exists():
+            import time as _time
+            _t0 = _time.time()
+            print(f"Loading SUMO/WordNet db from {wn_path}...", file=sys.stderr)
+            sumo_index, sumo_map = sumo_wordnet.load_sumo_db(wn_path)
+            print(f"  {len(sumo_index):,} lemmas, {len(sumo_map):,} synsets  ({_time.time()-_t0:.1f}s)", file=sys.stderr)
+        else:
+            print(f"WARNING: WordNet path not found: {wn_path} (skipping SUMO expansion)", file=sys.stderr)
+    elif not _SUMO_AVAILABLE:
+        print("WARNING: sumo_wordnet.py not loadable — SUMO expansion disabled", file=sys.stderr)
 
     # Collect all files
     all_files = collect_all_files(str(index_path))
@@ -234,6 +268,12 @@ def main():
         axes = result.get("axes", {})
         candidates = result.get("candidates", [])
 
+        kw = extract_keywords(content)
+        sumo_concepts = (
+            sorted(sumo_wordnet.words_to_sumo(kw, sumo_index, sumo_map))
+            if sumo_index else []
+        )
+
         cache_entry = {
             "path": path,
             "title": title,
@@ -248,7 +288,8 @@ def main():
             "archetype_prefix": axes.get("archetype", {}).get("prefix"),
             "candidates": [c.get("gln", "") for c in candidates[:5]],
             "snippet": snippet,
-            "keywords": extract_keywords(content),
+            "keywords": kw,
+            "sumo_concepts": sumo_concepts,
         }
 
         results.append(cache_entry)

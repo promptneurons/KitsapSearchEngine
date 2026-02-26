@@ -34,14 +34,33 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 DEFAULT_CACHE = REPO_ROOT / "data" / "gln-cache.jsonl"
+DEFAULT_WORDNET = REPO_ROOT / "data" / "wordnet-mappings"
+
+# SUMO/WordNet bridge (loaded lazily in main() when W_SUMO > 0)
+try:
+    import importlib.util as _ilu
+    _sw_spec = _ilu.spec_from_file_location("sumo_wordnet", SCRIPT_DIR / "sumo_wordnet.py")
+    _sumo_wordnet = _ilu.module_from_spec(_sw_spec)
+    _sw_spec.loader.exec_module(_sumo_wordnet)
+    _SUMO_AVAILABLE = True
+except Exception:
+    _sumo_wordnet = None
+    _SUMO_AVAILABLE = False
+
+# Global SUMO state — populated in main() when active profile includes SUMO weight
+_SUMO_INDEX    = {}   # word → set[offset]
+_SUMO_MAPPINGS = {}   # offset → SUMO concept
 
 # Distance function weight profiles
 PROFILES = {
     "internal": {  # clawd/N200 private documents — GLN tree is meaningful
-        "gln": 0.40, "fgid": 0.25, "cec": 0.20, "candidates": 0.15, "keywords": 0.00,
+        "gln": 0.40, "fgid": 0.25, "cec": 0.20, "candidates": 0.15, "keywords": 0.00, "sumo": 0.00,
     },
-    "external": {  # customer/third-party data — CEC + keyword content match
-        "gln": 0.00, "fgid": 0.00, "cec": 0.70, "candidates": 0.00, "keywords": 0.30,
+    "external": {  # customer/third-party data — CEC + keyword surface match, no SUMO
+        "gln": 0.00, "fgid": 0.00, "cec": 0.70, "candidates": 0.00, "keywords": 0.30, "sumo": 0.00,
+    },
+    "external_sumo": {  # external data + SUMO semantic expansion (requires WordNet)
+        "gln": 0.00, "fgid": 0.00, "cec": 0.50, "candidates": 0.00, "keywords": 0.20, "sumo": 0.30,
     },
 }
 
@@ -50,6 +69,8 @@ W_GLN = 0.40
 W_FGID = 0.25
 W_CEC = 0.20
 W_CANDIDATES = 0.15
+W_KEYWORDS = 0.00
+W_SUMO = 0.00
 
 # CEC → JDN crosswalk (subset for match scoring)
 CEC_TO_JDN = {
@@ -127,16 +148,59 @@ def keyword_jaccard(kw_a, kw_b):
     return len(set_a & set_b) / len(set_a | set_b)
 
 
+def sumo_jaccard_from_words(kw_a, kw_b):
+    """
+    Expand two keyword lists to SUMO concept sets, then compute Jaccard.
+    Uses the globally-loaded _SUMO_INDEX / _SUMO_MAPPINGS.
+    If either set is empty (no mappings found), returns 0.0.
+    """
+    if not _SUMO_INDEX or not _SUMO_MAPPINGS:
+        return 0.0
+    concepts_a = _sumo_wordnet.words_to_sumo(kw_a or [], _SUMO_INDEX, _SUMO_MAPPINGS)
+    concepts_b = _sumo_wordnet.words_to_sumo(kw_b or [], _SUMO_INDEX, _SUMO_MAPPINGS)
+    return _sumo_wordnet.sumo_jaccard(concepts_a, concepts_b)
+
+
+def sumo_jaccard_from_cache(sumo_a, kw_b):
+    """
+    When the doc has precomputed sumo_concepts and the query supplies keywords,
+    expand query keywords at runtime and compare against doc's cached SUMO set.
+    """
+    if not sumo_a and not kw_b:
+        return 0.0
+    if sumo_a:
+        # doc has precomputed concepts; expand query keywords on the fly
+        concepts_b = (
+            _sumo_wordnet.words_to_sumo(kw_b or [], _SUMO_INDEX, _SUMO_MAPPINGS)
+            if _SUMO_INDEX else frozenset()
+        )
+        return _sumo_wordnet.sumo_jaccard(frozenset(sumo_a), concepts_b) if _sumo_wordnet else 0.0
+    # Neither has SUMO cache — fall back to word-level expansion
+    return sumo_jaccard_from_words(kw_b, [])
+
+
 def relevance(query, doc):
     """Compute relevance score between query doc and candidate doc."""
-    r_gln = gln_proximity(query["gln"], doc["gln"])
+    r_gln  = gln_proximity(query["gln"], doc["gln"])
     r_fgid = fgid_jaccard(query["fgid_detected"], doc["fgid_detected"])
-    r_cec = cec_match(query["cec"], doc["cec"], query.get("jdn"), doc.get("jdn"))
+    r_cec  = cec_match(query["cec"], doc["cec"], query.get("jdn"), doc.get("jdn"))
     r_cand = candidate_overlap(query["candidates"], doc["candidates"])
     r_kw   = keyword_jaccard(query.get("keywords", []), doc.get("keywords", []))
 
+    # SUMO semantic axis: prefer precomputed doc concepts; expand query keywords live
+    if W_SUMO > 0:
+        doc_sumo = doc.get("sumo_concepts")
+        q_kw     = query.get("keywords", [])
+        if doc_sumo is not None:
+            r_sumo = sumo_jaccard_from_cache(doc_sumo, q_kw)
+        else:
+            # Neither side precomputed — expand both from keywords
+            r_sumo = sumo_jaccard_from_words(q_kw, doc.get("keywords", []))
+    else:
+        r_sumo = 0.0
+
     score = (W_GLN * r_gln + W_FGID * r_fgid + W_CEC * r_cec
-             + W_CANDIDATES * r_cand + W_KEYWORDS * r_kw)
+             + W_CANDIDATES * r_cand + W_KEYWORDS * r_kw + W_SUMO * r_sumo)
 
     return {
         "score": round(score, 4),
@@ -145,6 +209,7 @@ def relevance(query, doc):
         "cec_match": round(r_cec, 4),
         "candidate_overlap": round(r_cand, 4),
         "keyword_jaccard": round(r_kw, 4),
+        "sumo_jaccard": round(r_sumo, 4),
     }
 
 
@@ -271,6 +336,7 @@ def render_markdown(query, ranked, permutation_order, top_n=0):
             ("CEC match", W_CEC, "cec_match"),
             ("Candidate overlap", W_CANDIDATES, "candidate_overlap"),
             ("Keyword Jaccard", W_KEYWORDS, "keyword_jaccard"),
+            ("SUMO semantic", W_SUMO, "sumo_jaccard"),
         ]:
             raw = scores[key]
             contrib = raw * weight
@@ -297,6 +363,7 @@ def render_markdown(query, ranked, permutation_order, top_n=0):
             "CEC": scores["cec_match"] * W_CEC,
             "Candidates": scores["candidate_overlap"] * W_CANDIDATES,
             "Keywords": scores["keyword_jaccard"] * W_KEYWORDS,
+            "SUMO": scores.get("sumo_jaccard", 0.0) * W_SUMO,
         }
         primary = max(axis_scores, key=axis_scores.get)
         lines.append(f"| {rank} | `{entry['title']}` | {scores['score']:.2f} | {primary} |")
@@ -341,18 +408,48 @@ def main():
     parser.add_argument(
         "--profile", "-p",
         choices=list(PROFILES.keys()), default="internal",
-        help="Scoring profile: internal (GLN-weighted) or external (CEC-weighted). Default: internal",
+        help=(
+            "Scoring profile. internal=GLN-weighted (N200 docs); "
+            "external=CEC+keywords (third-party, no SUMO); "
+            "external_sumo=CEC+SUMO semantic (requires WordNet). Default: internal"
+        ),
+    )
+    parser.add_argument(
+        "--wordnet-path", "-w",
+        default=str(DEFAULT_WORDNET),
+        help=f"Path to WordNetMappings directory (default: {DEFAULT_WORDNET}). Used by external_sumo profile.",
     )
 
     args = parser.parse_args()
 
     # Apply profile weights globally
-    global W_GLN, W_FGID, W_CEC, W_CANDIDATES, W_KEYWORDS
+    global W_GLN, W_FGID, W_CEC, W_CANDIDATES, W_KEYWORDS, W_SUMO
+    global _SUMO_INDEX, _SUMO_MAPPINGS
     W_GLN        = PROFILES[args.profile]["gln"]
     W_FGID       = PROFILES[args.profile]["fgid"]
     W_CEC        = PROFILES[args.profile]["cec"]
     W_CANDIDATES = PROFILES[args.profile]["candidates"]
     W_KEYWORDS   = PROFILES[args.profile]["keywords"]
+    W_SUMO       = PROFILES[args.profile]["sumo"]
+
+    # Load SUMO/WordNet if the profile uses it
+    if W_SUMO > 0:
+        if not _SUMO_AVAILABLE:
+            print("WARNING: sumo_wordnet.py not available — SUMO weight set to 0", file=sys.stderr)
+            W_SUMO = 0.0
+        else:
+            wn_path = Path(args.wordnet_path)
+            if wn_path.exists():
+                import time as _time
+                _t0 = _time.time()
+                print(f"Loading SUMO/WordNet db from {wn_path}...", file=sys.stderr)
+                _SUMO_INDEX, _SUMO_MAPPINGS = _sumo_wordnet.load_sumo_db(wn_path)
+                print(f"  {len(_SUMO_INDEX):,} lemmas, {len(_SUMO_MAPPINGS):,} synsets  ({_time.time()-_t0:.1f}s)",
+                      file=sys.stderr)
+            else:
+                print(f"WARNING: WordNet path not found: {wn_path} — SUMO weight set to 0", file=sys.stderr)
+                W_SUMO = 0.0
+
     cache_path = Path(args.cache)
 
     if not cache_path.exists():
