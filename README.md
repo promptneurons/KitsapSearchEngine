@@ -1,94 +1,155 @@
 # KitsapSearchEngine
 
-**RAG on the cheap.** A local document search engine that classifies and ranks private datasets using CEC subject classification — no cloud, no Google, no training required.
+A local semantic search engine for archival corpora. No cloud, no training data, no lock-in.
 
-## What It Does
+Distills any text dataset into a searchable index using universal subject classification (CEC) and ontological concept expansion (SUMO/WordNet). Runs on a laptop.
 
-Given any document corpus (forum threads, SMB files, archive collections), this toolchain:
-1. **Extracts** documents into structured YAML (one file per document, up to 80 lines of content)
-2. **Classifies** each document using the Cutter Expansive Classification (CEC) subject hierarchy
-3. **Ranks** documents by relevance using a 4-axis metric space
-4. **Outputs** SERP-style markdown with score breakdowns and snippets
+## The Pitch
 
-## Architecture
+> "Solving 90% of a customer's 'find our stuff' problem in a day is a business model you can franchise at scale."
 
-```
-Source data (SQLite / files)
-        ↓
-od-extract-threads.py       ← adapter: SQLite → per-thread YAML + index
-        ↓
-gln-precompute.py           ← classify all docs, build JSONL cache
-        ↓
-gln-ranker.py               ← rank docs against a query, output SERP markdown
-```
+1. Point at a dataset (forum archive, document store, newsletter export)
+2. Extract → classify → cache (one day's work)
+3. Deploy a local SERP — no Google needed
 
-## Classification Axes
+## How It Works
 
-| Axis | Weight (internal) | Weight (external) | Signal |
-|------|-------------------|-------------------|--------|
-| GLN proximity | 40% | 0% | Organizational tree distance (private) |
-| FGID Jaccard | 25% | 0% | Department code overlap (private) |
-| CEC match | 20% | 70% | Subject classification match |
-| Candidate overlap | 15% | 30% | Shared classification candidates |
+Three scoring axes for relevance ranking:
 
-**Internal profile:** for private `clawd`-structured document sets.  
-**External profile:** for customer/third-party datasets — CEC does the work.
+| Axis | Weight (external) | What it does |
+|------|-------------------|--------------|
+| **CEC** | 50% | Cutter Expansive Classification — universal library subject hierarchy, zero-shot |
+| **SUMO semantic** | 30% | WordNet 3.0 → SUMO concept expansion — bridges informal ↔ formal vocabulary |
+| **Keyword Jaccard** | 20% | Surface token overlap — fast, precise for exact terms |
+
+**CEC** classifies documents to library subjects (A=Philosophy, B=Theology, C=History, F=Society, H=Politics…) using keyword frequency. No training.
+
+**SUMO expansion** maps keywords to upper-ontology concepts via WordNet 3.0. "troops" and "military" both resolve to `MilitaryForce`. "priest" and "clergy" both resolve to `Cleric`. Bridges vocabulary across corpora without any training data.
+
+## Demo Dataset: Original Dissent Forum (2001–2005)
+
+- **10,561 threads**, **108,898 posts**
+- CEC coverage: 90.8% classified on first run
+- Subject distribution: F=20.6%, H=10.0%, E=9.9%, C=9.8%
+- Used by: [od-archivist](https://github.com/promptneurons/od-archivist) PN Desktop plugin
 
 ## Quick Start
 
 ```bash
-# 1. Extract forum threads (vBulletin SQLite → YAML + index)
-python3 scripts/od-extract-threads.py --db /path/to/posts_markdown.db --limit 500
+git clone https://github.com/promptneurons/KitsapSearchEngine
+cd KitsapSearchEngine
 
-# 2. Precompute classification cache
-python3 scripts/gln-precompute.py --index data/od-thread-index.yaml --output data/od-cache.jsonl
+# Install deps (pyyaml only — everything else is stdlib)
+pip3 install pyyaml
 
-# 3. Rank — pick 11 random docs, rank 10 against 1
-python3 scripts/gln-ranker.py --cache data/od-cache.jsonl --pool 100
-
-# 4. Rank against a specific query
-python3 scripts/gln-ranker.py --cache data/od-cache.jsonl --query data/od-threads/thread-020872.yaml
+# Run existing OD-2006 demo (requires od-cache.jsonl — see below)
+python3 scripts/gln-ranker.py \
+  --cache data/od-cache.jsonl \
+  --profile external_sumo \
+  --pool 200 --top 10 \
+  --seed 42
 ```
 
-## Data Dependencies
+## Building Your Own Index
 
-- `data/cec-hierarchy.ttl` — CEC subject class hierarchy (included)
-- `data/jdn-ontology.ttl` — JDN ↔ CEC crosswalk (optional, enhances CEC scoring)
-- `llms-N200-index.yaml` — private document index (not included, internal use only)
+### Step 1: Extract threads to YAML
 
-## OD-2006 Demo Dataset
+Each document becomes one YAML file with metadata + 80-line content excerpt:
 
-The `data/od-thread-index.yaml` indexes 10,561 threads from the Original Dissent forum archive (2002–2006). CEC distribution:
+```bash
+# Original Dissent SQLite → YAML (requires posts_markdown.db)
+python3 scripts/od-extract-threads.py
 
-| CEC | Subject | Threads |
-|-----|---------|---------|
-| F | History | 20.6% |
-| H | Society/Demotics | 10.0% |
-| E | Biography/Literature | 9.9% |
-| C | Christianity/Judaism | 9.8% |
-| J | Social Science | 7.4% |
-| K | Law | 6.8% |
+# Salo archive TTL → YAML (requires salo-threads.ttl)  
+python3 scripts/salo-extract-ttl.py
 
-## Product Vision
-
-SMB deployment pattern:
-1. Customer provides their data (SharePoint export, forum archive, file share)
-2. Distill → classify → index (this toolchain)
-3. Deliver a box that knows their data — searchable, navigable, no external dependencies
-
-Feeds into **OpenPlanter** for packaging and deployment.
-
-## Files
-
+# Result: data/{corpus}-threads/thread-NNNNNN.yaml
+#         data/{corpus}-thread-index.yaml
 ```
-scripts/
-  gln-resolver.py        Triple-axis GLN/CEC classifier (935 lines)
-  gln-precompute.py      Build JSONL cache from document index
-  gln-ranker.py          4-axis relevance ranker, SERP output
-  od-extract-threads.py  Adapter: vBulletin SQLite → per-thread YAML
-data/
-  cec-hierarchy.ttl      CEC subject class hierarchy
-  od-thread-index.yaml   OD-2006 thread index (10,561 entries)
-skills/
-  SKILL.md               document-classifier skill v0.3
+
+### Step 2: Precompute semantic vectors
+
+```bash
+python3 scripts/gln-precompute.py \
+  --index data/od-thread-index.yaml \
+  --output data/od-cache.jsonl
+
+# Adds per-document: CEC class, keywords, SUMO concepts
+# Runtime: ~90s for 10k threads on modest hardware
 ```
+
+### Step 3: Search
+
+```bash
+# Interactive ranker (document-to-document similarity)
+python3 scripts/gln-ranker.py \
+  --cache data/od-cache.jsonl \
+  --profile external_sumo \
+  --pool 200 --top 10
+
+# Free-text search (via od-archivist integration)
+python3 /path/to/od-archivist/scripts/search.py \
+  "paleoconservatism Buchanan foreign policy" \
+  --cache data/od-cache.jsonl
+```
+
+## Scoring Profiles
+
+```python
+PROFILES = {
+    # N200 private documents — org-specific GLN tree is meaningful
+    "internal":      {"gln": 0.40, "fgid": 0.25, "cec": 0.20, "candidates": 0.15, "keywords": 0.00, "sumo": 0.00},
+    # Third-party data — CEC + surface keywords, no SUMO load overhead
+    "external":      {"gln": 0.00, "fgid": 0.00, "cec": 0.70, "candidates": 0.00, "keywords": 0.30, "sumo": 0.00},
+    # Third-party data + semantic expansion — best for cross-vocabulary corpora
+    "external_sumo": {"gln": 0.00, "fgid": 0.00, "cec": 0.50, "candidates": 0.00, "keywords": 0.20, "sumo": 0.30},
+}
+```
+
+## Data Requirements
+
+| File | Purpose | Source |
+|------|---------|--------|
+| `data/cec-hierarchy.ttl` | CEC subject hierarchy | Included |
+| `data/wordnet-mappings/` | WordNet 3.0 + SUMO mappings | `/home/john/sumo/WordNetMappings/` (symlink) |
+| `data/od-thread-index.yaml` | Thread index (committed) | Included |
+| `data/od-cache.jsonl` | Precomputed vectors (gitignored) | Build with gln-precompute.py |
+| `data/od-threads/` | Per-thread YAMLs (gitignored) | Build with od-extract-threads.py |
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `gln-resolver.py` | Classify a single document → CEC + FGID + GLN |
+| `gln-precompute.py` | Build JSONL cache for entire index |
+| `gln-ranker.py` | Rank documents by relevance to a query |
+| `sumo_wordnet.py` | WordNet → SUMO concept bridge |
+| `od-extract-threads.py` | SQLite → per-thread YAML (OD-2006) |
+| `salo-extract-ttl.py` | TTL + HTML → per-thread YAML (Salo archive) |
+| `salo-extract-threads.py` | HTML-only Salo extractor (superseded) |
+
+## Extending to New Corpora
+
+The pipeline is a pattern, not a product. Adapt it to any text dataset:
+
+1. Write an extractor that produces one YAML per document:
+   ```yaml
+   threadid: "12345"
+   title: "Document title"
+   source: "your-corpus"
+   op: "First 80 lines of content..."
+   ```
+2. Build an index YAML (see `data/od-thread-index.yaml` for schema)
+3. Run `gln-precompute.py --index your-index.yaml --output your-cache.jsonl`
+4. Search with `gln-ranker.py --cache your-cache.jsonl --profile external_sumo`
+
+The CEC classifier and SUMO expansion work on any English text with no configuration.
+
+## Related Projects
+
+- [od-archivist](https://github.com/promptneurons/od-archivist) — PN Desktop plugin using this engine for OD-2006 search
+- [PN Desktop](https://github.com/promptneurons/pn-desktop) — host application
+
+## License
+
+MIT
