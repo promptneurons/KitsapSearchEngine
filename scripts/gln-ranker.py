@@ -185,6 +185,31 @@ def format_cec(entry):
     return cec
 
 
+def extract_yaml_op(snippet, max_chars=200):
+    """If snippet looks like raw YAML, parse out the op: content."""
+    import html as _h
+    import re as _re
+    if not snippet:
+        return ""
+    s = _h.unescape(snippet)
+    if not (s.startswith("threadid:") or s.startswith("title:") or s.startswith("source:")):
+        return s
+    # Try yaml parse
+    try:
+        import yaml as _yaml
+        doc = _yaml.safe_load(s)
+        if isinstance(doc, dict) and "op" in doc:
+            text = str(doc["op"] or "").replace("\n", " ").strip()
+            if len(text) > max_chars:
+                text = text[:max_chars].rsplit(" ", 1)[0] + "..."
+            return text
+    except Exception:
+        pass
+    # Fallback regex
+    m = _re.search(r"op: (.+)", s)
+    if m:
+        return m.group(1).strip()[:max_chars]
+    return s
 def truncate_snippet(snippet, max_len=180):
     """Truncate snippet cleanly."""
     if not snippet:
@@ -194,7 +219,7 @@ def truncate_snippet(snippet, max_len=180):
     return snippet[:max_len].rsplit(" ", 1)[0] + "..."
 
 
-def render_markdown(query, ranked, permutation_order):
+def render_markdown(query, ranked, permutation_order, top_n=0):
     """Render the ranking as markdown."""
     lines = []
     lines.append("# GLN Relevance Ranking")
@@ -209,7 +234,7 @@ def render_markdown(query, ranked, permutation_order):
     lines.append("")
 
     if query.get("snippet"):
-        lines.append(f"> {truncate_snippet(query['snippet'])}")
+        lines.append(f"> {truncate_snippet(extract_yaml_op(query['snippet']))}")
         lines.append("")
 
     lines.append("---")
@@ -220,7 +245,8 @@ def render_markdown(query, ranked, permutation_order):
                  f"{', '.join(str(i+1) for i in permutation_order)}*")
     lines.append("")
 
-    for rank, (entry, scores) in enumerate(ranked, 1):
+    detail = ranked[:top_n] if top_n > 0 else ranked
+    for rank, (entry, scores) in enumerate(detail, 1):
         rel = scores["score"]
 
         # Relevance bar (visual indicator)
@@ -252,7 +278,7 @@ def render_markdown(query, ranked, permutation_order):
         lines.append("")
 
         # Snippet
-        snippet = truncate_snippet(entry.get("snippet", ""))
+        snippet = truncate_snippet(extract_yaml_op(entry.get("snippet", "")))
         lines.append(f"> {snippet}")
         lines.append("")
 
@@ -306,6 +332,11 @@ def main():
         "--seed", "-s",
         type=int, default=None,
         help="Random seed for reproducible selection",
+    )
+    parser.add_argument(
+        "--top", "-t",
+        type=int, default=0,
+        help="Show only top N results in detail (0 = all). Summary table always shows all.",
     )
     parser.add_argument(
         "--profile", "-p",
@@ -380,7 +411,7 @@ def main():
     permutation_order = [shuffled_paths.index(p) for p in ranked_paths]
 
     # Render markdown
-    md = render_markdown(query_entry, scored, permutation_order)
+    md = render_markdown(query_entry, scored, permutation_order, top_n=args.top)
     print(md)
 
 

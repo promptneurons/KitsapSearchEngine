@@ -1,0 +1,53 @@
+name: macrobius
+source: substack
+sections:
+- name: macrobius-2024
+  gln: ''
+  fgid: []
+  files:
+  - path: data/macrobius/post-the-archdruid-on-wagner-the-rheingold.yaml
+    title: The Archdruid on Wagner, the Rheingold Blockchain, and Class Warfare
+  children: []
+- name: macrobius-2025
+  gln: ''
+  fgid: []
+  files:
+  - path: data/macrobius/post-useful-resources-for-learning-classical.yaml
+    title: Useful Resources for Learning Classical Languages
+  - path: data/macrobius/post-registration-and-enrollment-in-classical.yaml
+    title: Registration and Enrollment in Classical Education Courses 2025-2026
+  - path: data/macrobius/post-free-classical-education-courses.yaml
+    title: Free Classical Education Courses Coming 2025-2026
+  - path: data/macrobius/post-ais-to-put-classical-christian-educators.yaml
+    title: AIs to put Classical Christian Educators (CCE) out of Work
+  - path: data/macrobius/post-green-wizardry-vol-1-no-3.yaml
+    title: Green Wizardry, Vol. 1, No. 3
+  - path: data/macrobius/post-the-law-of-god.yaml
+    title: The Law of God
+  - path: data/macrobius/post-the-classic-liberal-arts-education.yaml
+    title: The Classic Liberal Arts Education of the American Founding Fathers
+  - path: data/macrobius/post-green-wizardry-vol-1-no-5.yaml
+    title: Green Wizardry, Vol. 1, No. 5
+  - path: data/macrobius/post-classical-christian-education-and.yaml
+    title: Classical Christian Education and Nuclear Warfare
+  - path: data/macrobius/post-how-do-you-give-a-turing-test-to.yaml
+    title: How do you give a Turing Test to an Anthill?
+  - path: data/macrobius/post-green-wizardry-vol-1-no-2.yaml
+    title: Green Wizardry, Vol. 1, No. 2
+  - path: data/macrobius/post-homeschooling-with-ai-googles-notebooklm.yaml
+    title: 'Homeschooling with AI: Google''s NotebookLM'
+  - path: data/macrobius/post-green-wizardry-vol-1-no-1.yaml
+    title: Green Wizardry, Vol. 1, No. 1
+  - path: data/macrobius/post-introduction-to-classical-christian.yaml
+    title: 'Introduction to Classical Christian Paideia: Preface'
+  - path: data/macrobius/post-welcome-to-the-autodidact-newsletter.yaml
+    title: Welcome to the Autodidact Newsletter
+  - path: data/macrobius/post-controlling-autodidact-newsletter.yaml
+    title: Controlling Autodidact Newsletter Preferences
+  - path: data/macrobius/post-curriculum-plans-and-free-weekly.yaml
+    title: Curriculum Plans and Free Weekly Newsletter
+  - path: data/macrobius/post-this-is-a-test-of-the-publication.yaml
+    title: This is a test of the Publication Section feature
+  - path: data/macrobius/post-the-kaya-identity-econophysics-and.yaml
+    title: The Kaya Identity, Econophysics, and the Quadrivium
+  children: []

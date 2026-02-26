@@ -1,0 +1,424 @@
+title: The Kaya Identity, Econophysics, and the Quadrivium
+url: https://macrobius.substack.com/p/the-kaya-identity-econophysics-and
+date: '2025-01-13'
+source: substack
+op: 'Linking together the world of Money and Global Banking to the world of Physical
+  Chemistry and Non-Equilibrium Thermodynamics is devils treading where angels will
+  not fear to defeat them.
+
+  The Kaya Identity is, as a quick glance at the link will show, the basis for calculating
+  economic taxes on carbon footprint, and so it is attempting, in the terminology
+  of Operations Research, some form of ''optimal control'' or at least constraining
+  and informing us about the tradeoffs involved in managing resources and balancing
+  those with production that consumes them.
+
+  The original discussion behind this series of articles was in a group that was discussing
+  Peak Oil and other resources—otherwise known by the name of the 1972 study ''Limits
+  to Growth'', Anthropogenic Global Warming (AGW), and related topics in Ecology,
+  such as Pollution and Chemical contamination, all as it effects human population
+  dynamics, i.e. , survival of the human race.
+
+  Before launching into those topics, however, I find it necessary to first discuss
+  the mathematics, economics, and science of the Kaya Identity, from the perspective
+  of the Liberal Arts (Trivium and Quadrivium), as it relates to Thomism. This discussion
+  in the article series will not occur in the first few numbers of the series—those
+  will come later in the essay series—but rather about dimensions and units and equations
+  (sciency/mathy stuff).
+
+  The conclusion of this series of essays, when we get there, will be, succinctly,
+  without applying the Classical Quadrivium to Natural Science, within the Aristotelian
+  framework of Thomism, the human race could very well see an existential catastrophe
+  in the next 10 years, resulting in a rapid collapse (death) of possibly 95% of the
+  planet''s human population.
+
+  Because of the boldness of that claim, allow me to provide at least a preliminary
+  sketch of how I plan to go about proving such a claim. I assure the reader I will
+  respect those readers who see the two topics in front of them, both of which they
+  would very much not care to discuss or spend time thinking about—Liberal Politics,
+  and Western Catholic Philosophy of Science. However, this substack is on both Classical
+  Liberalism and the Teaching Tradition of the Trivium and Quadrivium, in a Thomist
+  context.
+
+  Although those topics will be discussed eventually, and are necessary for framing
+  parts of my response, most of what I am discussing will be, simply an in-depth look
+  at the hot takes of Modern Science and Modern Economics, in ways that are seldom
+  understood or appreciated in Social Media or National Public Opinion sorts of discussions—thus
+  the necessary intrusion of Academic intellectual hobby horses of the late 20th century.
+  Whom I propose, riding on their rapidly failing rocking horse winners, to give a
+  rather sound drubbing.
+
+  The real purpose of the article series is to do some Schumpeterian Creative Destruction
+  of absurd and idiotic statements and arguments people keep making on the internet,
+  which is reaching a crescendo of course, as we approach a transition of political
+  power (?) in the United States of America.
+
+  Let me get a spoiler out of the way (and my only hope of getting Conservative readers
+  not to shut be down out of hand in their minds) ... I am going to argue that *should*
+  we in fact use the Kaya Identity as written, and *should we* happen to attempt to
+  control the ''forcing'' term of the human race''s existing global supply chain,
+  using Carbon taxes combined with a typical and fallible/unstable market mechanism
+  such as an Enron-style market for Carbon Credits, we would be (mis)matching a MARKET
+  solution (a.k.a. Global Neo-Liberal Finance), to an ECONOMIC and PHYSICAL problem
+  (logistics, resource scarcity), in the presence of PLANET SCIENCE tipping points,
+  we could very well, ahem...
+
+  Trigger the Atlantic Meridional Overturning Current shutdown, a critical transition
+  point in climatology, early. And I mean earlier than ten years from now, or whenever
+  we manage to get the taxes going in earnest. The econophysics of this tipping point
+  will be our ‘target’.
+
+  That''s right, trying to ''solve'' the problem brings it on early. Law of Unintended
+  Consequences which would really such unless you are a rich, elite Oligarch, a Global
+  Banker, or a Publican collecting taxes for the Imperium.
+
+  Hey look -- I just threw a bone to deplorable people who will never listen to reason
+  unless explain to them, ''what''s in it for my wealthy elite dynasty and personal
+  pleasure''. You know: the Uniparty, or if you will Neo-Liberals, who have failed
+  and are losing political control everywhere; Neo-Conservatives, who failed in 2008
+  and have been trying to start WW3 since; and maybe some of the more naive followers
+  of the new and coming order, which is surely some form of Trumpism, though likely
+  to morph into something unrecognisable to either Classical Liberals or to MAGA populists,
+  in about the same time as the EXISTENTIAL THREAT TO HUMANITY or at least the ecological
+  carrying capacity of the European Continent.
+
+  As for any Cassandras, Sustainability Back-to-Whole-Earthers, and Esoteric Conspiracy
+  Theorists out there, I won''t leave you out. Dugin, Alchemy, Hermetic Wizard Traps,
+  the Firefox Books, Schmittian reflections on the Nomos of the Earth, even the applications
+  of Quantum Loop Gravity and bit of Wagnerian Opera, to solving the planet''s problems—all
+  ahead in this series, not to mention the original purpose of this substack, which
+  is to teach Classical Education and the Eternal Verities to Christian educators
+  and Homeschoolers.
+
+  Pro-Tip: what isn''t Eternal, won''t be surviving the next decade.
+
+  Before leaving off, temporarily, the topics of institutional ideology, politics,
+  and economics, for the greener fields of Stochastic Process Limits and Operations
+  Research (and thus the relevance of the Quadrivium...) I recommend by perusing at
+  least the free articles on Brad DeLong''s substack[2]
+
+  Especially the three from last November on ''Unit 5'' of the course he taught last
+  semester.
+
+  Not everyone knows institutional history of Economics as well as Delong, and few
+  have his appreciation of our current political system with its failure of Neo-Liberalism
+  from the inside.
+
+  Anyway, I have my reasons for recommending ''an early skim'' even though I will
+  go over parts of ''the institutional history of the West from 1870 to 2010 and what''s
+  next'' myself.
+
+  Still here? Good Let''s dive right in, to the Kaya Identity.
+
+  Some up front comments:
+
+  1/ When you look at the Kaya Identity, you are looking at a *mathematical* identity,
+  which means that in its ''universe of discourse'' and over proper domains for however
+  you interpret the letters, it cannot possibly be false ... or falsified by any observations
+  or experimental results.
+
+  2/ Nor of course are you *obliged* to give the letters their intended ''standard''
+  interpretation. The think about logical and some mathematical truths are, they are
+  a priori true, and in an cases, such as this one, true about *anything* you want
+  to the letters to be, provided you respect the logic or mathematics.
+
+  NOTE: our first glimpse of the Quadrivium and Classical Education will come when
+  we look at the units and dimensions used in the Kaya Equation, in the next article
+  in this series.
+
+  3/ We might ask ourselves—what exactly is the *subject* matter (and academic fields)
+  of the bits and bobs? Even in the standard, intended interpretation, which is about
+  F , controlling the forcing term of the Carbon cycle introduced by human activities.
+
+  The Carbon cycle of course impacts Ecology, and Planetary Climatology and Oceanography,
+  as well as Atmospheric Chemistry. The ''deep science'' is Physical Chemistry and
+  20th century (Modern) Physics for the parts about Atomic Spectra.
+
+  P (population) is a bit of a cross over variable: the demographics of the human
+  race in both the ecological and economic sense. After all, ''Statistics'' was discovered
+  as a subject in the 19th century, to investigate the Science of running an Absolute
+  Hegelian style State, not unlike Prussia or to a lesser extent England. That is
+  ''vital statistics'' (how many slaves does the state have?) with an eye towards
+  keeping them alive, healthy, and productive—a bit of a problem for Capitalism and
+  the Industrial revolution in the 1840s, you might recall.
+
+  Next up is G, the GDP or economic output of, probably, a nation committing to the
+  Kyoto protocols after kicking off the IPCC process, for which the 1990s discussion,
+  the identity was first circulated by Kaya, in its traditional form.
+
+  So far, as fields, we have Econophysics, with a dash of Eco-Economic decoupling[3]
+  as the likely purpose of framing it at all.
+
+  G depends on P -- it takes people to have a Gross Domestic or National product.
+  Thus, we get to divide by P, in order to make the thing an identity and also to
+  call out some likely scaling.
+
+  Next, of course, comes E/G , the Energy intensity of GDP, measured in thermodynamic
+  units (toe—tonnes of oil [burned], equivalent). This doesn''t mean all the energy
+  comes from fossil fuels, but it does take out the scaling of energy usage in general,
+  by economic activity.
+
+  The reason for converting GDP resource usage to thermodynamic terms is reasonable,
+  given the importance of fossil fuel burning to The New Industrial State (catchy
+  title for a book on Economics, that).
+
+  So far, we''ve started with Chemical Physics (of the atmosphere), circled back through
+  Ecology (Demographics counting a particular species in a particular territory),
+  and circled back to Econophysics again, by contemplating physical consumption and
+  Economics, relative wealth in terms of money, but relating that, again, back to
+  the Thermodynamics. We are, of course, considering the global heat balance of the
+  planet, not that we have that anywhere in the equation, as a (non-equilibrium) thermodynamic
+  heat engine, with the atmospheric chemistry affecting, among other things, the radiative-convective
+  balance of the planet, viewed a complex system of coupled fluids and chemical species
+  -- we will return to this point later.
+
+  Finally, to close our identity we have to circle back to F somehow, so we can cancel
+  all the terms since after all, a mathematical identity has the form 1 = 1 and we
+  can show that by simply letting all the letters ''cancel each other out'', finally
+  dividing both sides by F . We do this with the obvious dodge, multiply by F/E ,
+  which is the emission intensity (measured in units of carbon but other Greenhouse
+  Gases or even chemical pollutants work as well, whether or not you dump them in
+  the atmosphere, the hydrosphere, bury them, or so any such similar thing).
+
+  In a sense, F represents ''economics'' too—it is clearly an ''externality'', part
+  of ''the tragedy of the commons'', and subject to Coase’s theorem. That is, there
+  is really on one trick in the Neo-Classical and Neo-Liberal play book for dealing
+  with market failures, and that is to raise taxes and make someone pay for them.
+  And it would be Wizard, of course, if the people doing the paying were of lower
+  orders than the Global Oligarchic Elite and their Techno-Mangerial Retainer class,
+  eh, chum?
+
+  Although the *form* of the Kaya identity is a universally true mathematical identity,
+  it clearly has an intended physical and economic interpretation, and a political
+  context. That context—remember in the US and thus the globe 1990s was the height
+  of Neo-Liberalism, of the Washington Consensus and International Global Finance.
+
+  In fact, it has the form of an accounting identity (though it is a mathematical
+  identity not one imposed by the structure of an accounting system), with intended
+  use in controlling, optimally—where optimal might mean Pareto Efficiency or some
+  other objective function—for the purpose of controlling the politics and economics
+  of the globe.
+
+  This is the part we have to have ''the talk'' (as John Derbyshire might call it)
+  about Operations Research and Optimal Control Theory). O.R. , as a field, emerged
+  precisely in the crisis of the 30s and 40s, which resulted in ''New Industrial State''
+  on the economic, agrarian, and industrial ashes of whatever the 1920s were, in both
+  Europe and North America, and every other continent.
+
+  The ''operations'' were the *military* operations and the persons doing it were
+  concerned with things like building the atom bomb, breaking the enigma code, using
+  computers to forecast the weather (for military operations) and so forth, on behalf
+  of late-stage Clauswitzian Triangle-States (the Government, the People, the Armed
+  Forces) exercising the ''instruments of State Power''—DIME (Diplomacy, Information/Intelligence,
+  Strategic Military Operations, and Economic Activity). This observation (and part
+  of the talk) will concern us later, when we get black to Brad Delong''s blogs.
+
+  The second part is a point to make immediately. The tools of OR are *shared* between
+  the physicists and the economists. Some creating the field, like Von Neumann, did
+  foundational in both subjects.
+
+  In fact (and this is a point about the Kaya Identity so watch closely): Economics
+  and Finance are duals of one another, and in global trade, even trading carbon credits
+  while producing carbon-containing goods and using carbon to ship them around the
+  planet.
+
+  Economics means the physical production and consumption of goods using raw resources
+  and capital goods to manufacture both desired goods, such as finished saleable commodities,
+  and undesired ''bads'', such as pollution or non-pollution with undesirable economic
+  effects).
+
+  Finance means money and banking, which has its own institutional history and market
+  systems.
+
+  These are two ''networks'', one solving a physical and logistic problem, the other
+  ''powering'' and controlling it, using banks and money.
+
+  Now you would *think* Economists would be ''specially good at banking and money,
+  but Macroeconomics of the sort used in the Neo-Liberal era has *eliminated* money
+  from its ''General Equilibrium'' equations, so far as it can. We will be returning
+  to Econophysics as a subject, because we must—the Kaya Identity is *about* Econophysics,
+  in a very deep sense—yet we MUST note that the streams of Economics and Finance
+  have been crossed, in the Global-Neoliberal system, perhaps fatally so.
+
+  The money flows one way (to pay for the goods), and the goods and resources get
+  put in commodified shipping containers, literally, and Shipping-as-a-Service happens
+  just in time, in the other direction. Until it doesn''t.
+
+  To make meta-sense of our planet, we need to have an eye to the purpose and methods
+  of dying Neo-Liberal Global Trade system and its relation to Operations Research
+  and the exercise of Nation-State (Clauswitzian) instruments of power. Otherwise,
+  we will not understand the CRISIS we are walking into and where all the mines set
+  for us in ''intellectual argument'' are laid, frankly.
+
+  We won''t understand why a Spenglerian Caesar is talking about buying (or transparently,
+  if necessary, occupying) Greenland, and why the Arctic is suddenly so deucedly important,
+  from the standpoint of Geopolitics and Mackinders World Island. Possibly, why Canada
+  is quick changing its Uniparty politics to be more Tory like Johnson in Britain
+  and less liberal like Biden or Kair.
+
+  It is unlikely that Trump would, in fact invade Canada, which is one reason I suggest
+  all the ''accommodations'' we are seeing are rather like the troop deployments of
+  the major powers on the eve of the ''Guns of August''. Behind the scenes diplomacy
+  betrays both position-taking (competition), and deal-making (cooperation).
+
+  Whether Iran will get out of this without some Parting Shot from PNAC in a final
+  attempt to toss some Anarchist Molotov Nuke through the Shiite Window, is harder
+  to say. Given about a week until ''The Inauguration'' (if indeed that event happens),
+  it would certainly be a matter of a rogue quasi-country in the Middle East deciding
+  to go it alone, against what is more like a fragile but workable consensus among
+  the elites.
+
+  The next installments to this essay will get us to the interpretation of the Kaya
+  Identity, a talk about the ''three kinds of randomness''—true randomness of a Random
+  Walk, psuedo-random sequences of ''deterministic chaos'', and the complexity theory
+  that may or may not be determinate or random, and may or may not be classical or
+  quantum, and why quantum simulations MATTER.
+
+  Also, what they have to do with a Swiftly Tilting Planet and its Tipping Points.
+
+  Slowly, then All at Once.
+
+  Share Discussion about this post Comments Restacks Top Latest Discussions No posts
+
+  Linking together the world of Money and Global Banking to the world of Physical
+  Chemistry and Non-Equilibrium Thermodynamics is devils treading where angels will
+  not fear to defeat them.
+
+  The Kaya Identity is, as a quick glance at the link will show, the basis for calculating
+  economic taxes on carbon footprint, and so it is attempting, in the terminology
+  of Operations Research, some form of ''optimal control'' or at least constraining
+  and informing us about the tradeoffs involved in managing resources and balancing
+  those with production that consumes them.
+
+  The original discussion behind this series of articles was in a group that was discussing
+  Peak Oil and other resources\u2014otherwise known by the name of the 1972 study
+  ''Limits to Growth'', Anthropogenic Global Warming (AGW), and related topics in
+  Ecology, such as Pollution and Chemical contamination, all as it effects human population
+  dynamics, i.e. , survival of the human race.
+
+  Before launching into those topics, however, I find it necessary to first discuss
+  the mathematics, economics, and science of the Kaya Identity, from the perspective
+  of the Liberal Arts (Trivium and Quadrivium), as it relates to Thomism. This discussion
+  in the article series will not occur in the first few numbers of the series\u2014those
+  will come later in the essay series\u2014but rather about dimensions and units and
+  equations (sciency/mathy stuff).
+
+  The conclusion of this series of essays, when we get there, will be, succinctly,
+  without applying the Classical Quadrivium to Natural Science, within the Aristotelian
+  framework of Thomism, the human race could very well see an existential catastrophe
+  in the next 10 years, resulting in a rapid collapse (death) of possibly 95% of the
+  planet''s human population.
+
+  Because of the boldness of that claim, allow me to provide at least a preliminary
+  sketch of how I plan to go about proving such a claim. I assure the reader I will
+  respect those readers who see the two topics in front of them, both of which they
+  would very much not care to discuss or spend time thinking about\u2014Liberal Politics,
+  and Western Catholic Philosophy of Science. However, this substack is on both Classical
+  Liberalism and the Teaching Tradition of the Trivium and Quadrivium, in a Thomist
+  context.
+
+  Although those topics will be discussed eventually, and are necessary for framing
+  parts of my response, most of what I am discussing will be, simply an in-depth look
+  at the hot takes of Modern Science and Modern Economics, in ways that are seldom
+  understood or appreciated in Social Media or National Public Opinion sorts of discussions\u2014thus
+  the necessary intrusion of Academic intellectual hobby horses of the late 20th century.
+  Whom I propose, riding on their rapidly failing rocking horse winners, to give a
+  rather sound drubbing.
+
+  The real purpose of the article series is to do some Schumpeterian Creative Destruction
+  of absurd and idiotic statements and arguments people keep making on the internet,
+  which is reaching a crescendo of course, as we approach a transition of political
+  power (?) in the United States of America.
+
+  Let me get a spoiler out of the way (and my only hope of getting Conservative readers
+  not to shut be down out of hand in their minds) ... I am going to argue that *should*
+  we in fact use the Kaya Identity as written, and *should we* happen to attempt to
+  control the ''forcing'' term of the human race''s existing global supply chain,
+  using Carbon taxes combined with a typical and fallible/unstable market mechanism
+  such as an Enron-style market for Carbon Credits, we would be (mis)matching a MARKET
+  solution (a.k.a. Global Neo-Liberal Finance), to an ECONOMIC and PHYSICAL problem
+  (logistics, resource scarcity), in the presence of PLANET SCIENCE tipping points,
+  we could very well, ahem...
+
+  Trigger the Atlantic Meridional Overturning Current shutdown, a critical transition
+  point in climatology, early. And I mean earlier than ten years from now, or whenever
+  we manage to get the taxes going in earnest. The econophysics of this tipping point
+  will be our \u2018target\u2019.
+
+  That''s right, trying to ''solve'' the problem brings it on early. Law of Unintended
+  Consequences which would really such unless you are a rich, elite Oligarch, a Global
+  Banker, or a Publican collecting taxes for the Imperium.
+
+  Hey look -- I just threw a bone to deplorable people who will never listen to reason
+  unless explain to them, ''what''s in it for my wealthy elite dynasty and personal
+  pleasure''. You know: the Uniparty, or if you will Neo-Liberals, who have failed
+  and are losing political control everywhere; Neo-Conservatives, who failed in 2008
+  and have been trying to start WW3 since; and maybe some of the more naive followers
+  of the new and coming order, which is surely some form of Trumpism, though likely
+  to morph into something unrecognisable to either Classical Liberals or to MAGA populists,
+  in about the same time as the EXISTENTIAL THREAT TO HUMANITY or at least the ecological
+  carrying capacity of the European Continent.
+
+  As for any Cassandras, Sustainability Back-to-Whole-Earthers, and Esoteric Conspiracy
+  Theorists out there, I won''t leave you out. Dugin, Alchemy, Hermetic Wizard Traps,
+  the Firefox Books, Schmittian reflections on the Nomos of the Earth, even the applications
+  of Quantum Loop Gravity and bit of Wagnerian Opera, to solving the planet''s problems\u2014all
+  ahead in this series, not to mention the original purpose of this substack, which
+  is to teach Classical Education and the Eternal Verities to Christian educators
+  and Homeschoolers.
+
+  Pro-Tip: what isn''t Eternal, won''t be surviving the next decade.
+
+  Before leaving off, temporarily, the topics of institutional ideology, politics,
+  and economics, for the greener fields of Stochastic Process Limits and Operations
+  Research (and thus the relevance of the Quadrivium...) I recommend by perusing at
+  least the free articles on Brad DeLong''s substack[2]
+
+  Especially the three from last November on ''Unit 5'' of the course he taught last
+  semester.
+
+  Not everyone knows institutional history of Economics as well as Delong, and few
+  have his appreciation of our current political system with its failure of Neo-Liberalism
+  from the inside.
+
+  Anyway, I have my reasons for recommending ''an early skim'' even though I will
+  go over parts of ''the institutional history of the West from 1870 to 2010 and what''s
+  next'' myself.
+
+  Still here? Good Let''s dive right in, to the Kaya Identity.
+
+  Some up front comments:
+
+  1/ When you look at the Kaya Identity, you are looking at a *mathematical* identity,
+  which means that in its ''universe of discourse'' and over proper domains for however
+  you interpret the letters, it cannot possibly be false ... or falsified by any observations
+  or experimental results.
+
+  2/ Nor of course are you *obliged* to give the letters their intended ''standard''
+  interpretation. The think about logical and some mathematical truths are, they are
+  a priori true, and in an cases, such as this one, true about *anything* you want
+  to the letters to be, provided you respect the logic or mathematics.
+
+  NOTE: our first glimpse of the Quadrivium and Classical Education will come when
+  we look at the units and dimensions used in the Kaya Equation, in the next article
+  in this series.
+
+  3/ We might ask ourselves\u2014what exactly is the *subject* matter (and academic
+  fields) of the bits and bobs? Even in the standard, intended interpretation, which
+  is about F , controlling the forcing term of the Carbon cycle introduced by human
+  activities.
+
+  The Carbon cycle of course impacts Ecology, and Planetary Climatology and Oceanography,
+  as well as Atmospheric Chemistry. The ''deep science'' is Physical Chemistry and
+  20th century (Modern) Physics for the parts about Atomic Spectra.
+
+  P (population) is a bit of a cross over variable: the demographics of the human
+  race in both the ecological and economic sense. After all, ''Statistics'' was discovered
+  as a subject in the 19th century, to investigate the Science of running an Absolute
+  Hegelian style State, not unlike Prussia or to a lesser extent England. That is
+  ''vital statistics'' (how many slaves does the state have?) with an eye towards
+  keeping them alive, healthy, and productive\u2014a bit of a problem for Capitalism
+  and the Industrial revolution in the 1840s, you might recall.
+
+  Next up is G, the GDP or economic output of, probably, a nation committing to the
+  Kyoto protocols after kicking off the IPCC process, for which the 1990s discussion,
+  the identity was first circulated by Kaya, in its traditional form.'

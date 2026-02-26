@@ -65,12 +65,32 @@ def extract_keywords(text, top_n=KEYWORD_TOP_N):
 
 
 def extract_snippet(file_path, max_chars=SNIPPET_MAX_CHARS):
-    """Extract the first non-heading, non-frontmatter paragraph from a markdown file."""
+    """Extract readable snippet from a file. Handles YAML (op: field) and markdown."""
     try:
         with open(file_path, "r", encoding="utf-8", errors="replace") as f:
-            lines = f.readlines()
+            raw = f.read()
     except (OSError, IOError):
         return ""
+
+    # YAML file: extract op: field
+    if file_path.endswith(".yaml") or file_path.endswith(".yml"):
+        try:
+            doc = yaml.safe_load(raw)
+            if isinstance(doc, dict) and doc.get("op"):
+                text = str(doc["op"]).replace("\n", " ").strip()
+                if len(text) > max_chars:
+                    text = text[:max_chars].rsplit(" ", 1)[0] + "..."
+                return text
+        except Exception:
+            pass
+        # Fallback: first substantial line
+        for line in raw.splitlines():
+            line = line.strip()
+            if len(line) > 40 and not line.endswith(":") and "://" not in line:
+                return line[:max_chars]
+        return ""
+
+    lines = raw.splitlines(keepends=True)
 
     in_frontmatter = False
     snippet_lines = []

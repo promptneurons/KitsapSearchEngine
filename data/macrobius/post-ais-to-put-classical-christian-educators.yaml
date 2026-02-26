@@ -1,0 +1,245 @@
+title: AIs to put Classical Christian Educators (CCE) out of Work
+url: https://macrobius.substack.com/p/ais-to-put-classical-christian-educators
+date: '2025-07-30'
+source: substack
+op: 'Actually, educators in general are well positioned. You are probably well acquainted
+  with writing ''Learning Objectives'', know what ''Scope and Sequence are'', and
+  have used the term ''Bloom''s Taxonomy'' in anger. You are well positioned to train
+  both humans and AIs.
+
+  We’ve been through three ‘revolutions’ in the last two years, starting with ChatGPT
+  awareness (November 2022), and then ‘Context Engineering’, and then ‘Agentic AI’.
+
+  Artificial Intelligence, fundamentally, requires creating Training or Teaching Materials
+  ( i.e., curriculum) for both humans and for AI. And the programming language is
+  something Language Arts teachers know well: English.
+
+  If you live and breathe ‘Scope and Sequence’ or can author ‘Learning Objectives’
+  and know what ‘Bloom’s Taxonomy’ is, then this REVOLUTION is for you.
+
+  There’s a lot going on here, and it’s happening very fast, so let’s dive in:
+
+  Here’s some stuff Claude Desktop spit out in the course the following ‘Trip Report’
+
+  I’m going to describe my very first attempt at ‘Context Engineering’ (attempting
+  to not just chat with an AI or ask it questions like it’s a search engine, but ‘program
+  it’ to give you the precise answer you want).
+
+  One thing that’s true of interacting with AIs is you have to learn some thing all
+  over again. You are probably
+
+  In the next section, I will give you links to the various artifacts I used at each
+  stage, so you can follow along and try doing what I did, and see if you get the
+  same results.
+
+  markdown files used, markdown and PDF files received back (in above folder)
+
+  image assets and screen shots (in above folder)
+
+  Link to this article in a WordPress (development, not production) WP blog
+
+  Link to markdown for this article (Trip Report for Lab Exercise 1)
+
+  a video of Simon Wardley Simon Wardley OSCON 2014 Keynote: “Introduction to Value
+  Chain Mapping” – YouTube
+
+  The Garage Band Revolution for Software Development is Coming
+
+  I was trying to write a lab manual for a course on Context Engineering, and teach
+  myself the subject at the same time (Rule #1 of teaching: You need to know more
+  than the dog)
+
+  As an example, I decided to use a ‘Wardley Map’ (some business school/project management
+  thing) and in particular to make the AI simulate being a madlib generator for Mission
+  Statements, like this one, built by Simon Wardley:
+
+  At a later point in the process, I gave some of the output to Google’s NotebookLM
+  (Gemini AI), and here’s what it thought I was trying to do:
+
+  This document outlines student instructions for the Wardley-Toy Lab , a practical
+  exercise focused on understanding and applying Wardley Maps for strategic visualization.
+  Students learn about key concepts like markdown , prompts , and context engineering
+  , which are crucial for effective interaction with AI systems . The lab’s learning
+  objectives are structured using Bloom’s Taxonomy , guiding students through various
+  cognitive levels from defining terms to designing lesson plans. The laboratory procedure
+  involves hands-on exploration of the Wardley Toy web application and practical application
+  of context and prompt engineering techniques to generate strategic content comparable
+  to Wardley Map analysis . Ultimately, the lab aims for students to proficiently
+  structure AI prompts, apply context engineering , and produce strategic insights
+  while demonstrating an understanding of educational frameworks.
+
+  I created a Markdown file–that’s a text file which is just what you are going to
+  tell the AI (by typing a prompt), except since it is longer and you want to save
+  it for repeated use, you save it, possibly with the extension .md if you are using
+  a computer that needs ‘file extensions’ like that, or .md.txt to emphasize to the
+  computer that it is a text file that you can read and edit without a special ‘Markdown
+  editor’. [1]
+
+  [1]: Later we will learn some markdown editors you can use, including an online
+  web app for that.
+
+  Markdown is a kind of Markup (there’s a pun there), like a copy editor or teacher
+  would use to mark up a student’s paper or some copy to be printed in a newspaper.
+
+  ‘Markdown’ is designed to be so non-intrusive you barely notice it. Software Developers
+  use it for writing documentation like README files (then called README.md ) and
+  since GenAI LLM’s (like chatGPT) are trained on lots of documentation found on the
+  web, they see so much of it that you can consider
+
+  MARKDOWN : the native language for talking to an AI, no matter what human language
+  (English or Chinese) you use.
+
+  So I created a file with some ideas I wanted to test related to Context Engineering,
+  and on a whim just decided to paste the text into Claude Desktop and see what it
+  made of that.
+
+  Input to Claude prompt box: ownCloud
+
+  You can read it if you like and try to guess what I was hoping for, but anyway it’s
+  a start.
+
+  It decided I wanted a document and offered me back a document with its thoughts.
+  It provided the document for downloading in two forms… Markdown (of course), and
+  PDF.
+
+  Not exactly what I wanted, but a start to analyze how Claude is working
+
+  A lot of ‘context engineering’ at this point is going to be trial and error. That
+  means we have to experiment. When you experiment, you will have inputs and outputs–save
+  them, using some system or other. I save them in folders
+
+  I had put in a dummy link for the actual
+
+  Caption: What that’s about:
+
+  So now we’re back to what I wanted to do, which is supply examples of from the ‘vision
+  statement generator’ to Claude Desktop and see if it could generate examples AS
+  PART OF THE LAB exercise.
+
+  Wardley_Toy_Lab_2Download
+
+  { Here is some sample output from the wardley toy. Generate another example }
+
+  Share Discussion about this post Comments Restacks Top Latest Discussions No posts
+
+  Actually, educators in general are well positioned. You are probably well acquainted
+  with writing ''Learning Objectives'', know what ''Scope and Sequence are'', and
+  have used the term ''Bloom''s Taxonomy'' in anger. You are well positioned to train
+  both humans and AIs.
+
+  We\u2019ve been through three \u2018revolutions\u2019 in the last two years, starting
+  with ChatGPT awareness (November 2022), and then \u2018Context Engineering\u2019,
+  and then \u2018Agentic AI\u2019.
+
+  Artificial Intelligence, fundamentally, requires creating Training or Teaching Materials
+  ( i.e., curriculum) for both humans and for AI. And the programming language is
+  something Language Arts teachers know well: English.
+
+  If you live and breathe \u2018Scope and Sequence\u2019 or can author \u2018Learning
+  Objectives\u2019 and know what \u2018Bloom\u2019s Taxonomy\u2019 is, then this REVOLUTION
+  is for you.
+
+  There\u2019s a lot going on here, and it\u2019s happening very fast, so let\u2019s
+  dive in:
+
+  Here\u2019s some stuff Claude Desktop spit out in the course the following \u2018Trip
+  Report\u2019
+
+  I\u2019m going to describe my very first attempt at \u2018Context Engineering\u2019
+  (attempting to not just chat with an AI or ask it questions like it\u2019s a search
+  engine, but \u2018program it\u2019 to give you the precise answer you want).
+
+  One thing that\u2019s true of interacting with AIs is you have to learn some thing
+  all over again. You are probably
+
+  In the next section, I will give you links to the various artifacts I used at each
+  stage, so you can follow along and try doing what I did, and see if you get the
+  same results.
+
+  markdown files used, markdown and PDF files received back (in above folder)
+
+  image assets and screen shots (in above folder)
+
+  Link to this article in a WordPress (development, not production) WP blog
+
+  Link to markdown for this article (Trip Report for Lab Exercise 1)
+
+  a video of Simon Wardley Simon Wardley OSCON 2014 Keynote: \u201CIntroduction to
+  Value Chain Mapping\u201D \u2013 YouTube
+
+  The Garage Band Revolution for Software Development is Coming
+
+  I was trying to write a lab manual for a course on Context Engineering, and teach
+  myself the subject at the same time (Rule #1 of teaching: You need to know more
+  than the dog)
+
+  As an example, I decided to use a \u2018Wardley Map\u2019 (some business school/project
+  management thing) and in particular to make the AI simulate being a madlib generator
+  for Mission Statements, like this one, built by Simon Wardley:
+
+  At a later point in the process, I gave some of the output to Google\u2019s NotebookLM
+  (Gemini AI), and here\u2019s what it thought I was trying to do:
+
+  This document outlines student instructions for the Wardley-Toy Lab , a practical
+  exercise focused on understanding and applying Wardley Maps for strategic visualization.
+  Students learn about key concepts like markdown , prompts , and context engineering
+  , which are crucial for effective interaction with AI systems . The lab\u2019s learning
+  objectives are structured using Bloom\u2019s Taxonomy , guiding students through
+  various cognitive levels from defining terms to designing lesson plans. The laboratory
+  procedure involves hands-on exploration of the Wardley Toy web application and practical
+  application of context and prompt engineering techniques to generate strategic content
+  comparable to Wardley Map analysis . Ultimately, the lab aims for students to proficiently
+  structure AI prompts, apply context engineering , and produce strategic insights
+  while demonstrating an understanding of educational frameworks.
+
+  I created a Markdown file\u2013that\u2019s a text file which is just what you are
+  going to tell the AI (by typing a prompt), except since it is longer and you want
+  to save it for repeated use, you save it, possibly with the extension .md if you
+  are using a computer that needs \u2018file extensions\u2019 like that, or .md.txt
+  to emphasize to the computer that it is a text file that you can read and edit without
+  a special \u2018Markdown editor\u2019. [1]
+
+  [1]: Later we will learn some markdown editors you can use, including an online
+  web app for that.
+
+  Markdown is a kind of Markup (there\u2019s a pun there), like a copy editor or teacher
+  would use to mark up a student\u2019s paper or some copy to be printed in a newspaper.
+
+  \u2018Markdown\u2019 is designed to be so non-intrusive you barely notice it. Software
+  Developers use it for writing documentation like README files (then called README.md
+  ) and since GenAI LLM\u2019s (like chatGPT) are trained on lots of documentation
+  found on the web, they see so much of it that you can consider
+
+  MARKDOWN : the native language for talking to an AI, no matter what human language
+  (English or Chinese) you use.
+
+  So I created a file with some ideas I wanted to test related to Context Engineering,
+  and on a whim just decided to paste the text into Claude Desktop and see what it
+  made of that.
+
+  Input to Claude prompt box: ownCloud
+
+  You can read it if you like and try to guess what I was hoping for, but anyway it\u2019s
+  a start.
+
+  It decided I wanted a document and offered me back a document with its thoughts.
+  It provided the document for downloading in two forms\u2026 Markdown (of course),
+  and PDF.
+
+  Not exactly what I wanted, but a start to analyze how Claude is working
+
+  A lot of \u2018context engineering\u2019 at this point is going to be trial and
+  error. That means we have to experiment. When you experiment, you will have inputs
+  and outputs\u2013save them, using some system or other. I save them in folders
+
+  I had put in a dummy link for the actual
+
+  Caption: What that\u2019s about:
+
+  So now we\u2019re back to what I wanted to do, which is supply examples of from
+  the \u2018vision statement generator\u2019 to Claude Desktop and see if it could
+  generate examples AS PART OF THE LAB exercise.
+
+  Wardley_Toy_Lab_2Download
+
+  { Here is some sample output from the wardley toy. Generate another example }'
