@@ -261,10 +261,19 @@ def main():
         title = entry["title"]
         full_path = REPO_ROOT / path
 
-        # Read content
+        # Read content + obsidian metadata (dir_path, sprint, quarter, links)
         content = ""
+        doc_meta = {}
         if full_path.exists():
             content = gln_resolver.read_file_content(str(full_path))
+            try:
+                doc_meta = yaml.safe_load(
+                    full_path.read_text(encoding="utf-8", errors="replace")
+                ) or {}
+                if not isinstance(doc_meta, dict):
+                    doc_meta = {}
+            except Exception:
+                doc_meta = {}
 
         # Run resolver
         result = gln_resolver.resolve_gln(title, content, path, nodes)
@@ -308,6 +317,10 @@ def main():
             "keywords": kw,
             "sumo_concepts": sumo_concepts,
             "lang": detected_lang,
+            "dir_path": doc_meta.get("dir_path", ""),
+            "sprint": doc_meta.get("sprint"),
+            "quarter": doc_meta.get("quarter"),
+            "links": doc_meta.get("links", []),
         }
 
         results.append(cache_entry)

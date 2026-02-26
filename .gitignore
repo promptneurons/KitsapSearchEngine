@@ -14,3 +14,13 @@ data/phora-threads.ttl
 data/llms-txt/
 data/llms-txt-cache.jsonl
 data/*.sqlite
+
+# Company/family jewels — NEVER push to GitHub
+data/obsidian-local/
+data/obsidian-local-cache.jsonl
+data/obsidian-local-index.yaml
+data/obsidian-local.sqlite
+data/daynotes/
+data/daynotes-cache.jsonl
+data/daynotes-index.yaml
+data/daynotes.sqlite

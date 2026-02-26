@@ -62,6 +62,10 @@ PROFILES = {
     "external_sumo": {  # external data + SUMO semantic expansion (requires WordNet)
         "gln": 0.00, "fgid": 0.00, "cec": 0.50, "candidates": 0.00, "keywords": 0.20, "sumo": 0.30,
     },
+    "obsidian": {  # personal vault — dir_path proximity as GLN proxy (obsidian-local, Daynotes)
+        "gln": 0.00, "fgid": 0.05, "cec": 0.30, "candidates": 0.00, "keywords": 0.25, "sumo": 0.00,
+        "dir_path": 0.40,
+    },
 }
 
 # Active weights (overridden by --profile at startup)
@@ -71,6 +75,7 @@ W_CEC = 0.20
 W_CANDIDATES = 0.15
 W_KEYWORDS = 0.00
 W_SUMO = 0.00
+W_DIRPATH = 0.00
 
 # CEC → JDN crosswalk (subset for match scoring)
 CEC_TO_JDN = {
@@ -148,6 +153,29 @@ def keyword_jaccard(kw_a, kw_b):
     return len(set_a & set_b) / len(set_a | set_b)
 
 
+def dir_path_proximity(path_a, path_b):
+    """Path component overlap — measures proximity in vault hierarchy.
+    Fleeting/FY2026Q1/26012 vs Fleeting/FY2026Q1/26011 => 0.67 (same quarter, adj sprint)
+    Fleeting/FY2026Q1/26012 vs Areas/Technology => 0.0  (different section)
+    """
+    if not path_a or not path_b:
+        return 0.0
+    parts_a = [p for p in path_a.replace("\\", "/").split("/") if p]
+    parts_b = [p for p in path_b.replace("\\", "/").split("/") if p]
+    if not parts_a or not parts_b:
+        return 0.0
+    shared = sum(1 for a, b in zip(parts_a, parts_b) if a == b)
+    # Only count contiguous prefix match
+    contiguous = 0
+    for a, b in zip(parts_a, parts_b):
+        if a == b:
+            contiguous += 1
+        else:
+            break
+    max_depth = max(len(parts_a), len(parts_b))
+    return contiguous / max_depth if max_depth > 0 else 0.0
+
+
 def sumo_jaccard_from_words(kw_a, kw_b):
     """
     Expand two keyword lists to SUMO concept sets, then compute Jaccard.
@@ -186,6 +214,7 @@ def relevance(query, doc):
     r_cec  = cec_match(query["cec"], doc["cec"], query.get("jdn"), doc.get("jdn"))
     r_cand = candidate_overlap(query["candidates"], doc["candidates"])
     r_kw   = keyword_jaccard(query.get("keywords", []), doc.get("keywords", []))
+    r_dir  = dir_path_proximity(query.get("dir_path", ""), doc.get("dir_path", ""))
 
     # SUMO semantic axis: prefer precomputed doc concepts; expand query keywords live
     if W_SUMO > 0:
@@ -200,7 +229,8 @@ def relevance(query, doc):
         r_sumo = 0.0
 
     score = (W_GLN * r_gln + W_FGID * r_fgid + W_CEC * r_cec
-             + W_CANDIDATES * r_cand + W_KEYWORDS * r_kw + W_SUMO * r_sumo)
+             + W_CANDIDATES * r_cand + W_KEYWORDS * r_kw + W_SUMO * r_sumo
+             + W_DIRPATH * r_dir)
 
     return {
         "score": round(score, 4),
@@ -210,6 +240,7 @@ def relevance(query, doc):
         "candidate_overlap": round(r_cand, 4),
         "keyword_jaccard": round(r_kw, 4),
         "sumo_jaccard": round(r_sumo, 4),
+        "dir_path_proximity": round(r_dir, 4),
     }
 
 
@@ -337,6 +368,7 @@ def render_markdown(query, ranked, permutation_order, top_n=0):
             ("Candidate overlap", W_CANDIDATES, "candidate_overlap"),
             ("Keyword Jaccard", W_KEYWORDS, "keyword_jaccard"),
             ("SUMO semantic", W_SUMO, "sumo_jaccard"),
+            ("Dir proximity", W_DIRPATH, "dir_path_proximity"),
         ]:
             raw = scores[key]
             contrib = raw * weight
@@ -364,6 +396,7 @@ def render_markdown(query, ranked, permutation_order, top_n=0):
             "Candidates": scores["candidate_overlap"] * W_CANDIDATES,
             "Keywords": scores["keyword_jaccard"] * W_KEYWORDS,
             "SUMO": scores.get("sumo_jaccard", 0.0) * W_SUMO,
+            "Dir": scores.get("dir_path_proximity", 0.0) * W_DIRPATH,
         }
         primary = max(axis_scores, key=axis_scores.get)
         lines.append(f"| {rank} | `{entry['title']}` | {scores['score']:.2f} | {primary} |")
@@ -423,7 +456,7 @@ def main():
     args = parser.parse_args()
 
     # Apply profile weights globally
-    global W_GLN, W_FGID, W_CEC, W_CANDIDATES, W_KEYWORDS, W_SUMO
+    global W_GLN, W_FGID, W_CEC, W_CANDIDATES, W_KEYWORDS, W_SUMO, W_DIRPATH
     global _SUMO_INDEX, _SUMO_MAPPINGS
     W_GLN        = PROFILES[args.profile]["gln"]
     W_FGID       = PROFILES[args.profile]["fgid"]
@@ -431,6 +464,7 @@ def main():
     W_CANDIDATES = PROFILES[args.profile]["candidates"]
     W_KEYWORDS   = PROFILES[args.profile]["keywords"]
     W_SUMO       = PROFILES[args.profile]["sumo"]
+    W_DIRPATH    = PROFILES[args.profile].get("dir_path", 0.0)
 
     # Load SUMO/WordNet if the profile uses it
     if W_SUMO > 0:
