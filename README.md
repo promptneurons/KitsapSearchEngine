@@ -44,7 +44,7 @@ python3 scripts/od-extract-threads.py --db /path/to/posts_markdown.db --limit 50
 python3 scripts/gln-precompute.py --index data/od-thread-index.yaml --output data/od-cache.jsonl
 
 # 3. Rank — pick 11 random docs, rank 10 against 1
-python3 scripts/gln-ranker.py --cache data/od-cache.jsonl
+python3 scripts/gln-ranker.py --cache data/od-cache.jsonl --pool 100
 
 # 4. Rank against a specific query
 python3 scripts/gln-ranker.py --cache data/od-cache.jsonl --query data/od-threads/thread-020872.yaml
