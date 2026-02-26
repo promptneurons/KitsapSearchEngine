@@ -11,3 +11,5 @@ data/salo-cache.jsonl
 data/phora-threads/
 data/phora-cache.jsonl
 data/phora-threads.ttl
+data/llms-txt/
+data/llms-txt-cache.jsonl

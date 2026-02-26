@@ -36,6 +36,46 @@ echo ""
 cd "$REPO_ROOT"
 
 # ─────────────────────────────────────────────────────────────────────────────
+# 0. llms.txt corpus — rsync from kitsaplabs.com + extract
+# ─────────────────────────────────────────────────────────────────────────────
+log "--- [0a/5] llms.txt rsync from kitsaplabs ---"
+
+LLMS_SCRAPE_DIR="$HOME/llms-txt-scrape"
+KITSAP_SSH_KEY="$HOME/.ssh/id_kl_agent"
+KITSAP_HOST="kitsaplabs@kitsaplabs.com"
+KITSAP_PATH="public_html/tools/scrape2/"
+
+if [ -f "$KITSAP_SSH_KEY" ]; then
+    rsync -av --no-perms \
+        --include='*/' \
+        --include='llms.txt' \
+        --exclude='*' \
+        -e "ssh -i $KITSAP_SSH_KEY -o StrictHostKeyChecking=no" \
+        "${KITSAP_HOST}:${KITSAP_PATH}" \
+        "${LLMS_SCRAPE_DIR}/" \
+        2>&1 | tee -a "$LOG" | tail -5
+    log "rsync complete: $(find $LLMS_SCRAPE_DIR -name 'llms.txt' | wc -l) files"
+else
+    log "WARN: $KITSAP_SSH_KEY not found — skipping llms.txt rsync"
+    log "      To enable: scp ~/.ssh/id_kl_agent blue:~/.ssh/id_kl_agent"
+fi
+
+log "--- [0b/5] llms.txt extract ---"
+if [ -d "$LLMS_SCRAPE_DIR" ] && [ "$(ls -A $LLMS_SCRAPE_DIR)" ]; then
+    python3 scripts/llms-txt-extract.py \
+        --scrape-dir "$LLMS_SCRAPE_DIR" \
+        2>&1 | tee -a "$LOG"
+
+    log "--- [0c/5] llms.txt precompute ---"
+    python3 scripts/gln-precompute.py \
+        --index data/llms-txt-index.yaml \
+        --output data/llms-txt-cache.jsonl \
+        2>&1 | tee -a "$LOG"
+else
+    log "--- [0b-0c/5] llms.txt skipped (no scrape data) ---"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 1. Macrobius Substack — refresh from RSS
 # ─────────────────────────────────────────────────────────────────────────────
 log "--- [1/5] Macrobius Substack refresh ---"
@@ -110,8 +150,8 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 log ""
 log "=== Summary ==="
-for cache in data/macrobius-cache.jsonl data/phora-cache.jsonl \
-             data/od-cache.jsonl data/salo-cache.jsonl; do
+for cache in data/llms-txt-cache.jsonl data/macrobius-cache.jsonl \
+             data/phora-cache.jsonl data/od-cache.jsonl data/salo-cache.jsonl; do
     if [ -f "$REPO_ROOT/$cache" ]; then
         count=$(wc -l < "$REPO_ROOT/$cache")
         size=$(du -sh "$REPO_ROOT/$cache" | cut -f1)
