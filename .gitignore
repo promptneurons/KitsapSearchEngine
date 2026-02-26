@@ -24,3 +24,4 @@ data/daynotes/
 data/daynotes-cache.jsonl
 data/daynotes-index.yaml
 data/daynotes.sqlite
+data/*-analysis.md
