@@ -39,6 +39,17 @@ except Exception as _e:
     sumo_wordnet = None
     _SUMO_AVAILABLE = False
 
+# Import language detector (stdlib-only, always available)
+try:
+    import importlib.util as _ilu2
+    _ld_spec = _ilu2.spec_from_file_location("lang_detect", SCRIPT_DIR / "lang_detect.py")
+    lang_detect = _ilu2.module_from_spec(_ld_spec)
+    _ld_spec.loader.exec_module(lang_detect)
+    _LANG_DETECT_AVAILABLE = True
+except Exception:
+    lang_detect = None
+    _LANG_DETECT_AVAILABLE = False
+
 try:
     import yaml
 except ImportError:
@@ -269,9 +280,15 @@ def main():
         candidates = result.get("candidates", [])
 
         kw = extract_keywords(content)
+
+        # Language detection — gate SUMO on English only
+        detected_lang = "unknown"
+        if _LANG_DETECT_AVAILABLE and content:
+            detected_lang, _conf = lang_detect.detect_language(content)
+
         sumo_concepts = (
             sorted(sumo_wordnet.words_to_sumo(kw, sumo_index, sumo_map))
-            if sumo_index else []
+            if sumo_index and detected_lang in ("en", "unknown") else []
         )
 
         cache_entry = {
@@ -290,6 +307,7 @@ def main():
             "snippet": snippet,
             "keywords": kw,
             "sumo_concepts": sumo_concepts,
+            "lang": detected_lang,
         }
 
         results.append(cache_entry)
