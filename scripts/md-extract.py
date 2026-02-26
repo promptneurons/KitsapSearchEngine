@@ -15,6 +15,37 @@ Per-doc YAML fields:
 """
 import argparse, re, sys
 from pathlib import Path
+
+# DMOZ path → lang/region mapping
+_DMOZ_LANG = {
+    'german': 'de', 'french': 'fr', 'spanish': 'es', 'portuguese': 'pt',
+    'italian': 'it', 'dutch': 'nl', 'russian': 'ru', 'japanese': 'ja',
+    'chinese': 'zh', 'korean': 'ko', 'arabic': 'ar', 'polish': 'pl',
+    'swedish': 'sv', 'danish': 'da', 'norwegian': 'no', 'finnish': 'fi',
+    'czech': 'cs', 'hungarian': 'hu', 'turkish': 'tr', 'hebrew': 'he',
+}
+_DMOZ_REGION = {
+    'uk': 'GB', 'united_kingdom': 'GB', 'germany': 'DE', 'france': 'FR',
+    'spain': 'ES', 'italy': 'IT', 'japan': 'JP', 'china': 'CN',
+    'russia': 'RU', 'brazil': 'BR', 'canada': 'CA', 'australia': 'AU',
+    'netherlands': 'NL', 'sweden': 'SE', 'norway': 'NO', 'denmark': 'DK',
+    'poland': 'PL', 'czech_republic': 'CZ', 'switzerland': 'CH',
+}
+
+def parse_lang_region(dir_path: str):
+    """Extract lang/region from DMOZ-style directory paths."""
+    parts = [p.lower().replace('-', '_') for p in Path(dir_path).parts]
+    lang, region = None, None
+    for i, part in enumerate(parts):
+        if part == 'world' and i + 1 < len(parts):
+            candidate = parts[i + 1]
+            if candidate in _DMOZ_LANG:
+                lang = _DMOZ_LANG[candidate]
+            continue
+        if region is None and part in _DMOZ_REGION:
+            region = _DMOZ_REGION[part]
+    return lang, region
+
 try:
     import yaml
 except ImportError:
@@ -95,6 +126,7 @@ def main():
             rel = f.relative_to(source)
             dir_path = str(rel.parent)
             sprint, quarter = parse_dir_meta(dir_path)
+            lang, region = parse_lang_region(dir_path)
             # Daynotes: sprint code may be the filename itself (e.g. 10082.md)
             if not sprint:
                 stem_m = _SPRINT_RE.search(f.stem)
@@ -112,6 +144,8 @@ def main():
                 'dir_path': dir_path,
                 'sprint': sprint,
                 'quarter': quarter,
+                'lang': lang,
+                'region': region,
                 'links': links,
                 'op': '\n'.join(op_lines),
             }

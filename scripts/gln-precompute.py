@@ -319,6 +319,8 @@ def main():
             "lang": detected_lang,
             "dir_path": doc_meta.get("dir_path", ""),
             "sprint": doc_meta.get("sprint"),
+            "lang": doc_meta.get("lang"),      # ISO 639-1 (en/de/fr/ja...)
+            "region": doc_meta.get("region"),  # ISO 3166-1 alpha-2 (US/DE/GB...)
             "quarter": doc_meta.get("quarter"),
             "links": doc_meta.get("links", []),
         }
