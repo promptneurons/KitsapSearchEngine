@@ -41,12 +41,15 @@ def parse_dtg(dtg_str):
 def parse_sprint_code(sprint_str):
     if not sprint_str or len(sprint_str) != 5:
         return None
+    # 25000 = transitional sprint = 14122 alias = Dec 2024
+    if sprint_str == '25000':
+        return (2024, 12)
     try:
         yy = int(sprint_str[:2])
         mm = int(sprint_str[2:4])
-        # Old Daynotes format: YY 0-14 = actual year 2010-2024 (offset from 2010)
-        # MantisBT-60: 11102 = Oct 2021 P2 (days 20-31). P: 0=days1-9, 1=days10-19, 2=days20-31
-        # Transition: sprint 25000 Dec 2024; new system 25010+ uses 2000+YY
+        # Old format YY 0-14: actual_year = 2010+YY (offset from 2010)
+        # P digit pre-Feb2026: 10-day period (0=days1-9, 1=10-19, 2=20-31)
+        # P digit Feb2026+: week index 0-3 (sprint cadence = token reset cycle)
         if 0 <= yy <= 14:
             yy += 10
         if 1 <= mm <= 12:
