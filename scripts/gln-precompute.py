@@ -260,6 +260,11 @@ def main():
         path = entry["path"]
         title = entry["title"]
         full_path = REPO_ROOT / path
+        # Fallback: index may reference paths outside REPO_ROOT (e.g. --out-dir to openplanter)
+        if not full_path.exists():
+            alt = index_path.parent.parent / path
+            if alt.exists():
+                full_path = alt
 
         # Read content + obsidian metadata (dir_path, sprint, quarter, links)
         content = ""
