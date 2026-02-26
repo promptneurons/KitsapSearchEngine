@@ -6,3 +6,5 @@ data/gln-cache.jsonl
 nohup.out
 __pycache__/
 *.pyc
+data/salo-threads/
+data/salo-cache.jsonl
