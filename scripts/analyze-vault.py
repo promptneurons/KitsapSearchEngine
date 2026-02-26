@@ -44,6 +44,10 @@ def parse_sprint_code(sprint_str):
     try:
         yy = int(sprint_str[:2])
         mm = int(sprint_str[2:4])
+        # Old Daynotes format: YY 10-14 = actual year 20-24 (base 2010 not 2000)
+        # After transition (post-14122), leading digit incremented: 14->24
+        if 10 <= yy <= 14:
+            yy += 10
         if 1 <= mm <= 12:
             return (2000 + yy, mm)
     except ValueError:
