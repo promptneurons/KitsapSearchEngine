@@ -44,9 +44,8 @@ def parse_sprint_code(sprint_str):
     try:
         yy = int(sprint_str[:2])
         mm = int(sprint_str[2:4])
-        month = (mm + 1) // 2
-        if 1 <= month <= 12:
-            return (2000 + yy, month)
+        if 1 <= mm <= 12:
+            return (2000 + yy, mm)
     except ValueError:
         pass
     return None
@@ -58,7 +57,7 @@ def parse_filename_date(filename):
         result = parse_dtg(dtg_match.group(1))
         if result:
             return result
-    sprint_match = re.search(r'/(\d{5})/', filename)
+    sprint_match = re.search(r'/(\d{5})[/.]', filename)
     if sprint_match:
         result = parse_sprint_code(sprint_match.group(1))
         if result:
