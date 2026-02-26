@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+"""
+md-extract.py - Extract markdown file corpus to per-doc YAML + index
+
+Handles Obsidian-style markdown with YAML frontmatter, wikilinks, tags.
+Works on any flat/nested directory of .md files.
+
+Usage:
+  python3 scripts/md-extract.py --source /path/to/vault --name obsidian
+  python3 scripts/md-extract.py --source /path/to/Daynotes.wiki --name daynotes
+"""
+# SKELETON — complete post-reset
+# Key concerns:
+#   - YAML frontmatter (--- ... ---) extraction
+#   - Wikilink stripping ([[Page Title]] -> Page Title)
+#   - Tag extraction (#tag)
+#   - File path as GLN proxy (directory structure = taxonomy hint)
+#   - OP = first 80 lines after frontmatter
+#   - Handles nested dirs (Obsidian PARA structure)
+import argparse, re, sys
+from pathlib import Path
+try:
+    import yaml
+except ImportError:
+    print('ERROR: pyyaml required.', file=sys.stderr); sys.exit(1)
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+OP_MAX_LINES = 80
+
+def strip_wikilinks(text):
+    return re.sub(r'\[\[([^\]|]+)(?:\|[^\]]+)?\]\]', r'\1', text)
+
+def extract_frontmatter(text):
+    if not text.startswith('---'): return {}, text
+    end = text.find('\n---', 3)
+    if end == -1: return {}, text
+    try: fm = yaml.safe_load(text[3:end]) or {}
+    except Exception: fm = {}
+    return fm, text[end+4:]
+
+def extract_tags(text, fm):
+    tags = list(fm.get('tags', fm.get('tag', [])) or [])
+    inline = re.findall(r'(?<!\S)#([A-Za-z][A-Za-z0-9_/-]+)', text)
+    return list(dict.fromkeys(tags + inline))
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('--source', required=True)
+    p.add_argument('--name', required=True)
+    p.add_argument('--out-dir', default=None)
+    p.add_argument('--index', default=None)
+    p.add_argument('--limit', '-n', type=int, default=0)
+    args = p.parse_args()
+
+    source = Path(args.source)
+    out_dir = Path(args.out_dir) if args.out_dir else REPO_ROOT/'data'/args.name
+    index_out = Path(args.index) if args.index else REPO_ROOT/'data'/f'{args.name}-index.yaml'
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    files = sorted(source.rglob('*.md'))
+    if args.limit: files = files[:args.limit]
+    print(f'{len(files)} .md files found in {source}', file=sys.stderr)
+
+    entries = []
+    for i, f in enumerate(files):
+        try:
+            text = f.read_text(encoding='utf-8', errors='replace')
+            fm, body = extract_frontmatter(text)
+            body = strip_wikilinks(body)
+            tags = extract_tags(body, fm)
+            title = fm.get('title') or fm.get('Title') or f.stem
+            op_lines = [l for l in body.splitlines() if l.strip()][:OP_MAX_LINES]
+            rel = f.relative_to(source)
+            slug = str(rel).replace('/', '_').replace(' ', '-')[:80]
+            out_path = out_dir / f'{slug}.yaml'
+            rel_out = f'data/{args.name}/{slug}.yaml'
+            doc = {'title': title, 'path': str(rel), 'source': args.name,
+                   'tags': tags, 'frontmatter': fm,
+                   'dir_path': str(rel.parent),
+                   'op': '\n'.join(op_lines)}
+            with open(out_path, 'w', encoding='utf-8') as fh:
+                yaml.dump(doc, fh, allow_unicode=True, default_flow_style=False, sort_keys=False)
+            entries.append({'path': rel_out, 'title': title})
+            if (i+1) % 500 == 0: print(f'  {i+1}/{len(files)}', file=sys.stderr)
+        except Exception as e:
+            print(f'  WARN {f}: {e}', file=sys.stderr)
+
+    # Group index by top-level directory (PARA structure)
+    from collections import defaultdict
+    by_dir = defaultdict(list)
+    for e in entries:
+        # Use top dir or first path component
+        parts = Path(e['path']).parts
+        key = parts[2] if len(parts) > 3 else 'root'
+        by_dir[key].append({'path': e['path'], 'title': e['title']})
+    sections = [{'name': f'{args.name}-{k}', 'gln': '', 'fgid': [],
+                 'files': v, 'children': []} for k, v in sorted(by_dir.items())]
+    index = {'name': args.name, 'source': args.name, 'sections': sections}
+    with open(index_out, 'w') as fh:
+        yaml.dump(index, fh, allow_unicode=True, default_flow_style=False)
+    print(f'Done: {len(entries)} docs. Index: {index_out}', file=sys.stderr)
+
+if __name__ == '__main__': main()
