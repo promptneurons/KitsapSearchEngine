@@ -35,7 +35,17 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 DEFAULT_CACHE = REPO_ROOT / "data" / "gln-cache.jsonl"
 
-# Distance function weights
+# Distance function weight profiles
+PROFILES = {
+    "internal": {  # clawd/N200 private documents — GLN tree is meaningful
+        "gln": 0.40, "fgid": 0.25, "cec": 0.20, "candidates": 0.15,
+    },
+    "external": {  # customer/third-party data — CEC does the work
+        "gln": 0.00, "fgid": 0.00, "cec": 0.70, "candidates": 0.30,
+    },
+}
+
+# Active weights (overridden by --profile at startup)
 W_GLN = 0.40
 W_FGID = 0.25
 W_CEC = 0.20
@@ -283,8 +293,20 @@ def main():
         type=int, default=None,
         help="Random seed for reproducible selection",
     )
+    parser.add_argument(
+        "--profile", "-p",
+        choices=list(PROFILES.keys()), default="internal",
+        help="Scoring profile: internal (GLN-weighted) or external (CEC-weighted). Default: internal",
+    )
 
     args = parser.parse_args()
+
+    # Apply profile weights globally
+    global W_GLN, W_FGID, W_CEC, W_CANDIDATES
+    W_GLN        = PROFILES[args.profile]["gln"]
+    W_FGID       = PROFILES[args.profile]["fgid"]
+    W_CEC        = PROFILES[args.profile]["cec"]
+    W_CANDIDATES = PROFILES[args.profile]["candidates"]
     cache_path = Path(args.cache)
 
     if not cache_path.exists():
