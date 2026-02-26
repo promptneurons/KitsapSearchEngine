@@ -293,12 +293,15 @@ def main():
         axes = result.get("axes", {})
         candidates = result.get("candidates", [])
 
-        kw = extract_keywords(content)
+        # Use op field (clean content) for keywords if available;
+        # raw YAML content includes path/dir/link metadata that pollutes keywords
+        kw_text = doc_meta.get('op') or content
+        kw = extract_keywords(kw_text)
 
         # Language detection — gate SUMO on English only
         detected_lang = "unknown"
-        if _LANG_DETECT_AVAILABLE and content:
-            detected_lang, _conf = lang_detect.detect_language(content)
+        if _LANG_DETECT_AVAILABLE and kw_text:
+            detected_lang, _conf = lang_detect.detect_language(kw_text)
 
         sumo_concepts = (
             sorted(sumo_wordnet.words_to_sumo(kw, sumo_index, sumo_map))
