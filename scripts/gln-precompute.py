@@ -38,6 +38,30 @@ REPO_ROOT = SCRIPT_DIR.parent
 INDEX_PATH = REPO_ROOT / "llms-N200-index.yaml"
 DEFAULT_OUTPUT = REPO_ROOT / "data" / "gln-cache.jsonl"
 SNIPPET_MAX_CHARS = 200
+KEYWORD_TOP_N = 20
+
+# Common English stopwords (no external deps)
+_STOPWORDS = set("""
+a an the and or but in on at to of for with by from as is was are were be been
+being have has had do does did will would could should may might shall can its
+it this that these those i me my we our you your he she his her they them their
+not no nor so if then when where what who how all any each some such only just
+also very more most over about up out into after before while during between
+""".split())
+
+
+def extract_keywords(text, top_n=KEYWORD_TOP_N):
+    """Extract top-N content keywords from text (stopword-filtered, lowercased)."""
+    import re
+    if not text:
+        return []
+    words = re.findall(r"[a-z]{3,}", text.lower())
+    freq = {}
+    for w in words:
+        if w not in _STOPWORDS:
+            freq[w] = freq.get(w, 0) + 1
+    return [w for w, _ in sorted(freq.items(), key=lambda x: -x[1])[:top_n]]
+
 
 
 def extract_snippet(file_path, max_chars=SNIPPET_MAX_CHARS):
@@ -204,6 +228,7 @@ def main():
             "archetype_prefix": axes.get("archetype", {}).get("prefix"),
             "candidates": [c.get("gln", "") for c in candidates[:5]],
             "snippet": snippet,
+            "keywords": extract_keywords(content),
         }
 
         results.append(cache_entry)

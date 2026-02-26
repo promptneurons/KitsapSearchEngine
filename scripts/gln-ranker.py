@@ -38,10 +38,10 @@ DEFAULT_CACHE = REPO_ROOT / "data" / "gln-cache.jsonl"
 # Distance function weight profiles
 PROFILES = {
     "internal": {  # clawd/N200 private documents — GLN tree is meaningful
-        "gln": 0.40, "fgid": 0.25, "cec": 0.20, "candidates": 0.15,
+        "gln": 0.40, "fgid": 0.25, "cec": 0.20, "candidates": 0.15, "keywords": 0.00,
     },
-    "external": {  # customer/third-party data — CEC does the work
-        "gln": 0.00, "fgid": 0.00, "cec": 0.70, "candidates": 0.30,
+    "external": {  # customer/third-party data — CEC + keyword content match
+        "gln": 0.00, "fgid": 0.00, "cec": 0.70, "candidates": 0.00, "keywords": 0.30,
     },
 }
 
@@ -119,14 +119,24 @@ def candidate_overlap(cands_a, cands_b):
     return len(intersection) / len(union)
 
 
+def keyword_jaccard(kw_a, kw_b):
+    set_a = set(kw_a) if kw_a else set()
+    set_b = set(kw_b) if kw_b else set()
+    if not set_a or not set_b:
+        return 0.0
+    return len(set_a & set_b) / len(set_a | set_b)
+
+
 def relevance(query, doc):
     """Compute relevance score between query doc and candidate doc."""
     r_gln = gln_proximity(query["gln"], doc["gln"])
     r_fgid = fgid_jaccard(query["fgid_detected"], doc["fgid_detected"])
     r_cec = cec_match(query["cec"], doc["cec"], query.get("jdn"), doc.get("jdn"))
     r_cand = candidate_overlap(query["candidates"], doc["candidates"])
+    r_kw   = keyword_jaccard(query.get("keywords", []), doc.get("keywords", []))
 
-    score = W_GLN * r_gln + W_FGID * r_fgid + W_CEC * r_cec + W_CANDIDATES * r_cand
+    score = (W_GLN * r_gln + W_FGID * r_fgid + W_CEC * r_cec
+             + W_CANDIDATES * r_cand + W_KEYWORDS * r_kw)
 
     return {
         "score": round(score, 4),
@@ -134,6 +144,7 @@ def relevance(query, doc):
         "fgid_jaccard": round(r_fgid, 4),
         "cec_match": round(r_cec, 4),
         "candidate_overlap": round(r_cand, 4),
+        "keyword_jaccard": round(r_kw, 4),
     }
 
 
@@ -188,8 +199,9 @@ def render_markdown(query, ranked, permutation_order):
     lines = []
     lines.append("# GLN Relevance Ranking")
     lines.append("")
+    import html as _html
     lines.append(f"**Query document:** `{query['path']}`")
-    lines.append(f"**Title:** {query['title']}")
+    lines.append(f"**Title:** {_html.unescape(query['title'])}")
     lines.append(f"**GLN:** `{query['gln']}` ({query.get('gln_name', '')}) "
                  f"| **CEC:** {format_cec(query)} "
                  f"| **FGID:** [{format_fgid(query.get('fgid_detected', []))}]")
@@ -215,7 +227,7 @@ def render_markdown(query, ranked, permutation_order):
         bar_len = int(rel * 20)
         bar = "█" * bar_len + "░" * (20 - bar_len)
 
-        lines.append(f"### {rank}. `{entry['title']}` — relevance: **{rel:.2f}**")
+        lines.append(f"### {rank}. `{_html.unescape(entry['title'])}` — relevance: **{rel:.2f}**")
         lines.append(f"`{bar}`")
         lines.append("")
         lines.append(f"**Path:** `{entry['path']}`")
@@ -232,6 +244,7 @@ def render_markdown(query, ranked, permutation_order):
             ("FGID Jaccard", W_FGID, "fgid_jaccard"),
             ("CEC match", W_CEC, "cec_match"),
             ("Candidate overlap", W_CANDIDATES, "candidate_overlap"),
+            ("Keyword Jaccard", W_KEYWORDS, "keyword_jaccard"),
         ]:
             raw = scores[key]
             contrib = raw * weight
@@ -257,6 +270,7 @@ def render_markdown(query, ranked, permutation_order):
             "FGID": scores["fgid_jaccard"] * W_FGID,
             "CEC": scores["cec_match"] * W_CEC,
             "Candidates": scores["candidate_overlap"] * W_CANDIDATES,
+            "Keywords": scores["keyword_jaccard"] * W_KEYWORDS,
         }
         primary = max(axis_scores, key=axis_scores.get)
         lines.append(f"| {rank} | `{entry['title']}` | {scores['score']:.2f} | {primary} |")
@@ -302,11 +316,12 @@ def main():
     args = parser.parse_args()
 
     # Apply profile weights globally
-    global W_GLN, W_FGID, W_CEC, W_CANDIDATES
+    global W_GLN, W_FGID, W_CEC, W_CANDIDATES, W_KEYWORDS
     W_GLN        = PROFILES[args.profile]["gln"]
     W_FGID       = PROFILES[args.profile]["fgid"]
     W_CEC        = PROFILES[args.profile]["cec"]
     W_CANDIDATES = PROFILES[args.profile]["candidates"]
+    W_KEYWORDS   = PROFILES[args.profile]["keywords"]
     cache_path = Path(args.cache)
 
     if not cache_path.exists():
