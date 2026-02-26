@@ -8,3 +8,6 @@ __pycache__/
 *.pyc
 data/salo-threads/
 data/salo-cache.jsonl
+data/phora-threads/
+data/phora-cache.jsonl
+data/phora-threads.ttl
